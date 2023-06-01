@@ -1,0 +1,302 @@
+/* css for navigation */
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-bottom: 2px solid #ccc;
+  background-color: #cccccc3d;
+}
+
+.navigation li {
+  float: left;
+}
+
+.navigation li a {
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+
+}
+
+.navigation li a:hover {
+  color: #267a80;
+}
+
+
+.wallpaper,
+.picture-shadow,
+.picture-image {
+  display: block;
+  height: 100%;
+  left: 0;
+  top: 3pc;
+  width: 100%;
+}
+
+
+.picture {
+  padding-top: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.picture-shadow {
+  border-radius: 290486px;
+  background-image: radial-gradient(#000 0%, rgba(0, 0, 0, 0) 70%);
+  position: relative;
+  top: 10%;
+}
+
+.picture-image {
+  border-radius: 290486px;
+  position: absolute;
+}
+
+figure {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
+}
+
+footer {
+  background-color: #cccccc3d;
+  padding: 1em;
+  margin-top: 40%;
+  text-align: center;
+  clear: both;
+}
+
+.about {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  display: inline;
+
+}
+
+.about-info {
+  margin: 10%;
+  /* to create margin for whole "about-info" */
+}
+
+/* Style the container/contact section */
+.container {
+  /**border-radius: 5px;
+    background-color: none;
+    padding: 100px;**/
+
+  border-radius: 5px;
+  background-color: transparent;
+  padding: 100px;
+  margin: -74%;
+  display: inline;
+
+}
+
+section {
+  float: right;
+  margin: 0 1.5%;
+  width: 63%;
+  display: inline;
+}
+
+.second {
+  float: left;
+  margin: 0 1.5%;
+  width: 63%;
+}
+
+.side {
+  float: left;
+  margin: 0 1.5%;
+  width: 30%;
+}
+
+.second_aside {
+  float: right;
+  margin: 0 1.5%;
+  width: 20%;
+  margin-right: -50%;
+  margin-top: 33%;
+  position: relative;
+}
+
+
+
+.project ul {
+  text-decoration: underline;
+  list-style-type: square;
+}
+
+.download{
+  display: inline-block;
+  margin-top: 1.5rem;
+  vertical-align: top;
+}
+
+.ex-info{  
+float: left;
+margin-top: -16em;
+}
+
+
+/* Style inputs for form */
+
+* {
+  box-sizing: border-box;
+}
+
+
+input[type=text],
+input[type=email],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+
+/* Create two columns that float next to eachother */
+.column {
+  float: left;
+  width: 50%;
+  margin-top: 6px;
+  margin-left: 30%;
+  padding: 3em;
+  position: relative;
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Responsive styles for footer */
+@media screen and (max-width: 600px) {
+
+  /* Adjust padding and font size for smaller screens */
+  .footer {
+    padding: 10px;
+  }
+}
+
+
+
+
+
+
+
+@media only screen and (max-width: 480px) {
+
+  /* Add your CSS styles for small screens here */
+  .container {
+    margin: 0;
+    /* Adjust margins as needed */
+    padding: 50px;
+    /* Adjust padding as needed */
+  }
+
+  section,
+  .second,
+  .side,
+  .second_aside,.t_side {
+    float: none;
+    width: 60%;
+    margin: 30px;
+  }
+
+}
+
+/* Styles for screens between 481 and 768 pixels wide */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+
+  /* Add your CSS styles for medium screens here */
+  .container {
+    margin: 0;
+    /* Adjust margins as needed */
+    padding: 50px;
+    /* Adjust padding as needed */
+  }
+
+  section,
+  .second,
+  .side,
+  .second_aside,.t_side {
+    float: none;
+    width: 60%;
+    margin: 35px;
+  }
+
+}
+
+/* Styles for screens between 769 and 1024 pixels wide */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+
+  /* Add your CSS styles for large screens here */
+  .container {
+    margin: 0;
+    /* Adjust margins as needed */
+    padding: 50px;
+    /* Adjust padding as needed */
+  }
+
+  section,
+  .second,
+  .side,
+  .second_aside,.t_side {
+    float: none;
+    width: 60%;
+    margin: 35px;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+
+  .column,
+  input[type=submit] {
+    width: auto;
+    margin-top: 0;
+  }
+}

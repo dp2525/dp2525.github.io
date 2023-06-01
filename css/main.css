@@ -1,0 +1,626 @@
+html {
+  background-color: #5f45bb;
+  background-image: linear-gradient(to bottom right, #189cac, #d054e4);
+  color: #fff;
+  font-family: "Quicksand", sans-serif;
+  font-size: 16px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  min-height: 100vh;
+  min-width: 300px;
+  overflow-x: hidden;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-bottom:  2px solid #ccc;
+  background-color: #cccccc3d;
+}
+
+.navigation li {
+  float: left;
+}
+
+.navigation li a {
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+ 
+}
+
+.navigation li a:hover {
+  color: #267a80;
+}
+
+header {
+  background-color: transparent;
+  padding: 0px;
+  border-bottom: 2px solid #ccc;
+}
+  
+  footer {
+    background-color: #cccccc3d;
+    padding: 1em;
+    text-align: center;
+    clear: both;
+    margin-top: 10%;
+  }
+  
+a {
+  color: currentColor;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.wallpaper {
+  display: block;
+  height: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-image: url("../images/abstract.jpg");
+  background-position: center;
+  background-size: cover;
+  opacity: 0.2;
+  position: relative;
+}
+.content {
+  display: flex;
+  position: relative;
+  min-height: 50vh;
+}
+.side {
+  max-height: 20rem;
+  max-width: 20rem;
+}
+.about {
+  max-width: 26rem;
+  left: 150%;
+}
+
+  /* Responsive styles */
+  @media screen and (max-width: 600px) {
+    /* Adjust padding and font size for smaller screens */
+    .footer {
+      padding: 10px;
+    }
+  }
+
+@media screen and (max-width: 799px) {
+  .content {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem 3rem;
+  }
+  .side {
+    margin-bottom: 3rem;
+    width: 100%;
+  }
+
+  header {
+    text-align: center;
+  }
+  .nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .content {
+    padding: 4rem;
+    /* justify-content: space-around; */
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .side {
+    /* flex-grow: 0; */
+    flex-shrink: 0;
+    height: 20rem;
+    margin-left: 4rem;
+    order: 2;
+    width: 20rem;
+  }
+  .about {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+}
+
+.wallpaper,
+.picture-shadow,
+.picture-image {
+  display: block;
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+.picture {
+  padding-top: 100%;
+  position: relative;
+  width: 100%;
+}
+.picture-shadow {
+  border-radius: 290486px;
+  background-image: radial-gradient(#000 0%, rgba(0, 0, 0, 0) 70%);
+  position: absolute;
+  top: 10%;
+}
+
+.picture-image {
+  border-radius: 290486px;
+  position: absolute;
+}
+
+.name {
+  font-size: 2.25rem;
+  line-height: 1.125;
+  margin-bottom: 0.5rem;
+}
+
+.job,
+.button {
+  font-family: "Montserrat", "Quicksand", sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.job {
+  color: #ffe479;
+  font-size: 0.75rem;
+}
+
+.hr {
+  background-color: #ff470f;
+  border: none;
+  content: "";
+  height: 1px;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  transform-origin: center left;
+  width: 6rem;
+}
+
+.description {
+  font-size: 1.5rem;
+}
+
+.contact {
+  display: inline-block;
+  margin-top: 1.5rem;
+  vertical-align: top;
+}
+
+
+.button {
+  background-color: #fff;
+  border-radius: 290486px;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+  color: #9013fe;
+  display: inline-block;
+  font-size: 0.875rem;
+  line-height: 1;
+  padding: 1.25em 2em;
+  text-shadow: none;
+  transition-property: box-shadow, transform;
+  user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+}
+
+.button:hover {
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.2);
+  transform: scale(1.02) translateY(-4px);
+}
+.button:active {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+  transform: scale(0.98) translateY(-2px);
+}
+
+.skills{
+  background: var(--clr-primary-9);
+  padding-top: 50px;
+  padding-bottom: 90px;
+}
+
+.skills h1{
+  font-family: var(--ff-primary);
+  color: var(--clr-grey-1);
+  text-transform: capitalize;
+  font-size: 32px;
+  letter-spacing: 4px;
+  margin-top: 23px;
+  margin-bottom: 11px;
+}
+
+.skills hr{
+  background: var(--clr-primary-5);
+  border: 1px solid var(--clr-primary-5);
+  height: 2px;
+  width: 80px;
+  margin-bottom: 60px;
+}
+
+.skills h2{
+  font-family: var(--ff-primary);
+  color: var(--clr-primary-1);
+  text-transform: capitalize;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  margin-top: 23px;
+  margin-bottom: 30px;
+}
+
+.skills h3{
+  font-family: var(--ff-primary);
+  color: var(--clr-primary-1);
+  font-size: 14px;
+  font-weight: 200;
+  margin-top: 23px;
+  margin-bottom: 11px;
+}
+
+.skills p{
+  font-family: var(--ff-primary);
+  color: var(--clr-primary-1);
+  font-size: 15px;
+  font-weight: 30;
+  margin-top: 23px;
+  margin-bottom: 11px;
+}
+
+.skill-1-bar-container,
+.skill-2-bar-container,
+.skill-3-bar-container{
+  width: 85vw;
+  max-width: 550px;
+
+  height: 15.5px;
+  background: white;
+  border-radius: 10px;
+}
+
+.skill-1-bar,
+.skill-2-bar,
+.skill-3-bar{
+  height: 100%;
+  background: var(--clr-primary-5);
+  border-radius: 10px;
+}
+
+
+.skill-1-bar{
+  width: 50%;
+}
+
+.skill-2-bar{
+  width: 70%;
+}
+
+.skill-3-bar{
+  width: 80%;
+}
+
+
+.skill-1-bar-container,
+.skill-2-bar-container,
+.skill-3-bar-container{
+  position: relative;
+}
+
+.skill-1-bar-container p,
+.skill-2-bar-container p,
+.skill-3-bar-container p{
+  position: absolute;
+  top: -315%;
+}
+
+.skill-1-bar-container p{
+  left: 50%;
+}
+
+.skill-2-bar-container p{
+  left: 70%;
+}
+
+.skill-3-bar-container p{
+  left: 80%;
+}
+
+/* !the above code is to place the percentages at their respective positions above their respective bars */
+
+/* grid starts */
+
+.skills{
+  display: grid;
+  place-content: center center;
+  place-items: center center;
+}
+
+.skill-set-container{
+  display: grid;
+  place-content: center center;
+  place-items: center center;
+  row-gap: 50px;
+}
+
+/* grid ends */
+
+/* media queries start */
+
+@media screen and (min-width:850px){
+
+  .skill-1-bar-container,
+  .skill-2-bar-container,
+  .skill-3-bar-container{
+      width: 40vw;
+      max-width: 550px;
+  }
+
+  .skill-set-container{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 8%;
+  }
+
+
+  /* !the below code just changes the font-size of some components */
+
+  .skills h1{
+      font-size: 40px;
+  }
+
+  .skills h2{
+      font-size: 24px;
+  }
+
+  .skills h3{
+      font-size: 16px;
+  }
+
+  .skills p{
+      font-size: 16px;
+  }
+
+  /* !the above code just changes the font-size of some components */
+}
+
+/* media queries end */
+
+works{
+  background: white;
+  padding-top: 63px;
+  padding-bottom: 80px;
+}
+
+.works h1{
+  font-family: var(--ff-primary);
+  color: var(--clr-grey-1);
+  text-transform: capitalize;
+  font-size: 32px;
+  letter-spacing: 4px;
+  margin-top: 23px;
+  margin-bottom: 11px;
+}
+
+.works hr{
+  background: var(--clr-primary-5);
+  border: 1px solid var(--clr-primary-5);
+  height: 2px;
+  width: 80px;
+}
+
+.works p{
+  font-family: var(--ff-secondary);
+  color: var(--clr-grey-5);
+  font-size: 14px;
+  font-weight: 50;
+  line-height: 21px;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 65px;
+  padding: 0px 50px;
+  text-align: justify;
+
+  max-width: 500px;
+
+}
+
+.work{
+  background: var(--clr-primary-5);
+  
+
+  border-radius: 10px;
+
+  width: 85vw;
+  height: 36vh;
+
+  transition: all 0.5s 0s;
+}
+
+.work img{
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  object-fit: cover;
+  border-radius: 10px;
+
+  transition: all 0.5s 0s;
+}
+
+.work h2{
+  font-family: var(--ff-primary);
+  color: white;
+  text-transform: capitalize;
+  font-size: 16px;
+  letter-spacing: 2.5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.work h3{
+  font-family: var(--ff-primary);
+  color: white;
+  text-transform: capitalize;
+  font-size: 15px;
+  font-weight: 50;
+  text-align: center;
+}
+
+
+
+.work{
+  position: relative;
+}
+
+.work .work-title{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  opacity: 0;
+
+
+  transition: all 0.5s 0s;
+}
+
+/* !the above code is to place "work-title" at the center of it's container named "work work-$" */
+
+/* styling end */
+
+/* grid starts */
+
+.works{
+  display: grid;
+  justify-items: center;
+  align-content: center;
+}
+
+.works-container{
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  row-gap: 32px;
+}
+
+/* grid ends */
+/* transition starts */
+
+/*! following is the code used to create border for "work" using pseudo element */
+
+.work::before{
+  content: "";
+  width: 100%;
+  height: 100%;
+
+  border: 4px solid white;
+  border-radius: 10px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  opacity: 0;
+  transition: all 0.5s 0s;
+}
+
+/*! above is the code used to create border for "work" using pseudo element */
+
+.work:hover::before{
+  opacity: 1;
+  transform: scale(0.8);
+}
+
+.work:hover .work-title{
+  opacity: 1;
+}
+
+.work:hover img{
+  opacity: 0.13;
+}
+
+/* transition ends */
+
+
+/* media queries start */
+
+@media screen and (min-width:650px){
+
+  .work{
+      width: 42vw;
+  }
+
+  .works-container{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 30px;
+  }
+
+}
+
+@media screen and (min-width:1000px){
+
+  .work{
+      width: 28vw;
+  }
+
+  .works-container{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+@media screen and (min-width:1200px){
+
+  .work{
+      height: 100%;
+      width: 100%;
+  }
+
+  .works-container{
+      display: grid;
+      
+      grid-template-columns: repeat(3, 360px);
+      grid-template-rows: repeat(2, 200px);
+
+      grid-template-areas:
+      "a b b"
+      "a x y"
+      ;
+  }
+
+  .work-1{
+      grid-area: a;
+  }
+
+  .work-2{
+      grid-area: b;
+  }
+
+  .work-3{
+      grid-area: x;
+  }
+
+  .work-4{
+      grid-area: y;
+  }
+
+}
+
+/* media queries end */
