@@ -20,6 +20,7 @@ export default function About() {
   const router = useRouter();
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false); // Add flip state
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -149,7 +150,7 @@ export default function About() {
       {/* Main content */}
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 pt-20 pb-10">
         
-        {/* About Me section */}
+        {/* About Me / Education section with flip */}
         <motion.div
           className="w-full max-w-7xl mx-auto mb-20"
           variants={fadeInLeft}
@@ -157,28 +158,123 @@ export default function About() {
           animate="visible"
         >
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-            {/* Text content - left side with proper alignment */}
-            <div className="flex-1 max-w-3xl lg:max-w-2xl text-left">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-left">
-                About Me
-              </h2>
-              <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed text-justify space-y-4">
-                <p>
-                  I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
-                </p>
-                <p>
-                  School time was a period of life when I discovered my interests and dared to dream. 
-                  Ever since I could remember, I have always loved the Computers. Whether it was secretly playing games on my father's work computer or through the weekly 2-hour computer laboratory sessions at school, 
-                  I developed my passion for the field of Computer Engineering.
-                </p>
-                <p>
-                  I'm a passionate about web development and creating intuitive user experiences. I have experience in building responsive and interactive web applications using modern technologies like React, Next.js, Tailwind CSS and more.
-                </p>
-                
-              </div>
+            {/* Flip container with 3D animation */}
+            <div className="flex-1 max-w-3xl lg:max-w-2xl text-left relative" style={{ perspective: "1000px" }}>
+              <motion.div
+                className="relative w-full"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {/* About Me - Front side */}
+                <div
+                  className={`w-full ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                  style={{
+                    backfaceVisibility: "hidden",
+                    position: isFlipped ? "absolute" : "relative",
+                    top: 0,
+                    left: 0,
+                    transform: "rotateY(0deg)"
+                  }}
+                >
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                    About Me
+                  </h2>
+                  <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed text-justify space-y-4">
+                    <p>
+                      I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
+                    </p>
+                    <p>
+                      School time was a period of life when I discovered my interests and dared to dream. 
+                      Ever since I could remember, I have always loved the Computers. Whether it was secretly playing games on my father's work computer or through the weekly 2-hour computer laboratory sessions at school, 
+                      I developed my passion for the field of Computer Engineering.
+                    </p>
+                    <p>
+                      I'm passionate about web development and creating intuitive user experiences. I have experience in building responsive and interactive web applications using modern technologies like React, Next.js, Tailwind CSS and more.
+                    </p>
+                  </div>
+
+                  {/* Flip button */}
+                  <button
+                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-white/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
+                    onClick={() => setIsFlipped(true)}
+                  >
+                    Flip
+                  </button>
+                </div>
+
+                {/* Education - Back side */}
+                <div
+                  className={`w-full ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                  style={{
+                    backfaceVisibility: "hidden",
+                    position: isFlipped ? "relative" : "absolute",
+                    top: 0,
+                    left: 0,
+                    transform: "rotateY(180deg)"
+                  }}
+                >
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                    Education
+                  </h2>
+                  <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed space-y-6">
+                    {/* Education Item 1 */}
+                    <div className="border-l-4 border-black-400 pl-6 py-2">
+                      <h3 className="text-xl font-semibold text-black mb-2">
+                        Bachelor of Engineering - Computer Engineering
+                      </h3>
+                      <p className="text-black-300 font-medium mb-1">
+                        University Name | 2020 - 2024
+                      </p>
+                      <p className="text-sm text-black-300">
+                        Focused on software development, data structures, algorithms, and web technologies. 
+                        Graduated with honors and completed multiple projects in full-stack development.
+                      </p>
+                    </div>
+
+                    {/* Education Item 2 */}
+                    <div className="border-l-4 border-black-400 pl-6 py-2">
+                      <h3 className="text-xl font-semibold text-black mb-2">
+                        Higher Secondary Education
+                      </h3>
+                      <p className="text-black-300 font-medium mb-1">
+                        School Name | 2018 - 2020
+                      </p>
+                      <p className="text-sm text-black-300">
+                        Specialized in Science stream with Mathematics, Physics, and Computer Science. 
+                        Achieved excellent grades and developed foundational programming skills.
+                      </p>
+                    </div>
+
+                    {/* Certifications */}
+                    <div className="mt-6">
+                      <h4 className="text-lg font-semibold text-black mb-3">Certifications</h4>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="px-3 py-1 bg-blue-500/20 text-black-300 rounded-full text-sm border border-blue-400/30">
+                          React Developer
+                        </span>
+                        <span className="px-3 py-1 bg-green-500/20 text-black-300 rounded-full text-sm border border-green-400/30">
+                          JavaScript ES6+
+                        </span>
+                        <span className="px-3 py-1 bg-purple-500/20 text-black-300 rounded-full text-sm border border-purple-400/30">
+                          Web Development
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Back button */}
+                  <button
+                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-white/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
+                    onClick={() => setIsFlipped(false)}
+                  >
+                    Flip
+                  </button>
+                </div>
+              </motion.div>
             </div>
 
-            {/* Image - right side */}
+            {/* Image - right side (stays the same) */}
             <div className="flex-shrink-0 lg:ml-auto">
               <img
                 src="/about.png"
