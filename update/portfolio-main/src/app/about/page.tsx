@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import dynamic from 'next/dynamic';
 
 // Dynamically import components that might cause issues
@@ -18,10 +19,10 @@ const GithubButton = dynamic(() => import('@/components/ui/github-button').then(
 
 export default function About() {
   const router = useRouter();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Add dark mode state
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function About() {
       title: "Frontend Development",
       skills: [
         { name: "React", icon: "⚛️", color: "text-blue-500" },
-        { name: "Next.js", icon: "▲", color: "text-white-500" },
+        { name: "Next.js", icon: "▲", color: "text-gray-600 dark:text-white" },
         { name: "TypeScript", icon: "📘", color: "text-blue-500" },
         { name: "JavaScript", icon: "🟨", color: "text-yellow-500" },
         { name: "HTML5", icon: "🌐", color: "text-orange-500" },
@@ -49,7 +50,7 @@ export default function About() {
         { name: "Framer Motion", icon: "🎭", color: "text-purple-500" },
         { name: "Shadcn/ui", icon: "🎯", color: "text-gray-500" },
         { name: "Node.js", icon: "🟢", color: "text-green-500" },
-        { name: "Express", icon: "🚀", color: "text-white-500" },
+        { name: "Express", icon: "🚀", color: "text-gray-600 dark:text-white" },
         { name: "MongoDB", icon: "🍃", color: "text-green-500" },
         { name: "Redux", icon: "🔄", color: "text-purple-500" },
         { name: "React Router", icon: "🛣️", color: "text-red-500" },
@@ -80,7 +81,7 @@ export default function About() {
         const next = (prev + 1) % skillCategories.length;
         return next;
       });
-    }, 6600); // (5 seconds)
+    }, 6600);
 
     return () => {
       if (interval) {
@@ -100,19 +101,24 @@ export default function About() {
     visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.2 } }
   };
 
+  // Prevent hydration mismatch
   if (!mounted) {
-    return (
-      <div className="relative min-h-screen w-full bg-black flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
+    return null;
   }
 
+  const isDark = resolvedTheme === 'dark';
+
   return (
-    <div className={`relative min-h-screen w-full overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'} transition-colors duration-300`}>
+    <div className={`relative min-h-screen w-full overflow-hidden transition-colors duration-300 ${
+      isDark ? 'bg-gray-900' : 'bg-white'
+    }`}>
       {/* Background text */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center overflow-hidden z-0">
-        <div className={`bg-gradient-to-b ${isDarkMode ? 'from-neutral-400/20 to-neutral-400/0' : 'from-neutral-500/20 to-neutral-500/0'} bg-clip-text text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] leading-none font-black text-transparent select-none transition-colors duration-300`}>
+        <div className={`bg-gradient-to-b ${
+          isDark 
+            ? 'from-gray-400/20 to-gray-400/0' 
+            : 'from-neutral-500/20 to-neutral-500/0'
+        } bg-clip-text text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] leading-none font-black text-transparent select-none transition-colors duration-300`}>
           Dhvani
         </div>
       </div>
@@ -122,37 +128,61 @@ export default function About() {
         <GithubButton
           size="custom"
           repoUrl="https://github.com/dp2525/dp2525.github.io"
-          className={`${isDarkMode ? 'border-white hover:border-white' : 'border-black hover:border-black'}`}
+          className={`bg-white/20 backdrop-blur-lg border transition-all duration-300 ${
+            isDark ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+          }`}
         />
 
         {/* Container for all buttons */}
         <div className="flex flex-row sm:flex-col gap-3">
-          {/* Dark Mode Toggle */}
+          {/* Dark mode toggle */}
           <motion.button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center`}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
+              isDark 
+                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
+                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+            }`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isDarkMode ? (
-              // Sun icon for light mode
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-              </svg>
+            {isDark ? (
+              <motion.svg 
+                className="w-4 h-4" 
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
+                <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
+              </motion.svg>
             ) : (
-              // Moon icon for dark mode  
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <motion.svg 
+                className="w-4 h-4" 
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: -360 }}
+                transition={{ duration: 0.5 }}
+              >
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
+              </motion.svg>
             )}
           </motion.button>
 
           {/* LinkedIn button */}
           <motion.button
             onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
-            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center`}
+            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
+              isDark 
+                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
+                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+            }`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -166,7 +196,11 @@ export default function About() {
           {/* Home button */}
           <motion.button
             onClick={() => router.push('/')}
-            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg`}
+            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg ${
+              isDark 
+                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
+                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+            }`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -198,7 +232,7 @@ export default function About() {
           animate="visible"
         >
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-            {/* Flip container with 3D animation */}
+            {/* Flip container with 3D animation - Added glass background */}
             <div className="flex-1 max-w-3xl lg:max-w-2xl text-left relative" style={{ perspective: "1000px" }}>
               <motion.div
                 className="relative w-full"
@@ -206,9 +240,11 @@ export default function About() {
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 style={{ transformStyle: "preserve-3d" }}
               >
-                {/* About Me - Front side */}
+                {/* About Me - Front side with glass effect */}
                 <div
-                  className={`w-full ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                  className={`w-full ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'} ${
+                    isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6' : ''
+                  } transition-all duration-300`}
                   style={{
                     backfaceVisibility: "hidden",
                     position: isFlipped ? "absolute" : "relative",
@@ -217,11 +253,17 @@ export default function About() {
                     transform: "rotateY(0deg)"
                   }}
                 >
-                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
+                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>
                     About Me
                   </h2>
-                  <div className={`w-full h-0.5 bg-gradient-to-r from-transparent ${isDarkMode ? 'via-white/50' : 'via-black/50'} to-transparent mb-6 transition-colors duration-300`}></div>
-                  <div className={`${isDarkMode ? 'text-gray-300' : 'text-secondary-foreground'} text-lg md:text-xl leading-relaxed text-justify space-y-4 transition-colors duration-300`}>
+                  <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
+                    isDark ? 'via-white/50' : 'via-black/50'
+                  }`}></div>
+                  <div className={`text-lg md:text-xl leading-relaxed text-justify space-y-4 transition-colors duration-300 ${
+                    isDark ? 'text-gray-200' : 'text-secondary-foreground'
+                  }`}>
                     <p>
                       I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
                     </p>
@@ -238,7 +280,11 @@ export default function About() {
                   {/* Flip button - centered */}
                   <div className="flex justify-center mt-6">
                     <button
-                      className={`px-6 py-3 ${isDarkMode ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'} border-2 font-medium shadow-lg backdrop-blur-lg transition-all duration-300 rounded-lg`}
+                      className={`px-6 py-3 bg-white/20 backdrop-blur-lg border-2 font-medium shadow-lg transition-all duration-300 rounded-lg ${
+                        isDark 
+                          ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
+                          : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+                      }`}
                       onClick={() => setIsFlipped(true)}
                     >
                       Flip
@@ -246,9 +292,11 @@ export default function About() {
                   </div>
                 </div>
 
-                {/* Education - Back side */}
+                {/* Education - Back side with glass effect */}
                 <div
-                  className={`w-full ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                  className={`w-full ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'} ${
+                    isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6' : ''
+                  } transition-all duration-300`}
                   style={{
                     backfaceVisibility: "hidden",
                     position: isFlipped ? "relative" : "absolute",
@@ -257,41 +305,63 @@ export default function About() {
                     transform: "rotateY(180deg)"
                   }}
                 >
-                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
+                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>
                     Education
                   </h2>
-                  <div className={`${isDarkMode ? 'text-gray-300' : 'text-secondary-foreground'} text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300`}>
+                  <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
+                    isDark ? 'text-gray-200' : 'text-secondary-foreground'
+                  }`}>
                     {/* Education Item 1 */}
                     <div className="border-l-4 border-pink-400 pl-6 py-2">
-                      <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
+                      <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                        isDark ? 'text-white' : 'text-black'
+                      }`}>
                         Post Graduation - Full Stack Software Development
                       </h3>
-                      <p className={`font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-black-300'} transition-colors duration-300`}>
+                      <p className={`font-medium mb-1 transition-colors duration-300 ${
+                        isDark ? 'text-gray-300' : 'text-black-300'
+                      }`}>
                         Lambton College | 2020 - 2024
                       </p>
                     </div>
 
                     {/* Education Item 2 */}
-                    <div className="border-l-4 border-black-400 pl-6 py-2">
-                      <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
+                    <div className={`border-l-4 pl-6 py-2 transition-colors duration-300 ${
+                      isDark ? 'border-white' : 'border-black-400'
+                    }`}>
+                      <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                        isDark ? 'text-white' : 'text-black'
+                      }`}>
                         Bachelor of Engineering - Computer Engineering
                       </h3>
-                      <p className={`font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-black-300'} transition-colors duration-300`}>
+                      <p className={`font-medium mb-1 transition-colors duration-300 ${
+                        isDark ? 'text-gray-300' : 'text-black-300'
+                      }`}>
                         Gujarat Technological University | 2016 - 2020
                       </p>
                     </div>
 
                     {/* Certifications */}
                     <div className="mt-6">
-                      <h4 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>Certifications</h4>
+                      <h4 className={`text-lg font-semibold mb-3 transition-colors duration-300 ${
+                        isDark ? 'text-white' : 'text-black'
+                      }`}>Certifications</h4>
                       <div className="flex flex-wrap gap-2">
-                        <span className={`px-3 py-1 bg-blue-500/20 rounded-full text-sm border border-blue-400/30 ${isDarkMode ? 'text-blue-300' : 'text-black-300'} transition-colors duration-300`}>
+                        <span className={`px-3 py-1 bg-blue-500/20 rounded-full text-sm border border-blue-400/30 transition-colors duration-300 ${
+                          isDark ? 'text-blue-300' : 'text-black-300'
+                        }`}>
                           React Developer
                         </span>
-                        <span className={`px-3 py-1 bg-green-500/20 rounded-full text-sm border border-green-400/30 ${isDarkMode ? 'text-green-300' : 'text-black-300'} transition-colors duration-300`}>
+                        <span className={`px-3 py-1 bg-green-500/20 rounded-full text-sm border border-green-400/30 transition-colors duration-300 ${
+                          isDark ? 'text-green-300' : 'text-black-300'
+                        }`}>
                           JavaScript ES6+
                         </span>
-                        <span className={`px-3 py-1 bg-purple-500/20 rounded-full text-sm border border-purple-400/30 ${isDarkMode ? 'text-purple-300' : 'text-black-300'} transition-colors duration-300`}>
+                        <span className={`px-3 py-1 bg-purple-500/20 rounded-full text-sm border border-purple-400/30 transition-colors duration-300 ${
+                          isDark ? 'text-purple-300' : 'text-black-300'
+                        }`}>
                           Web Development
                         </span>
                       </div>
@@ -300,7 +370,11 @@ export default function About() {
 
                   {/* Back button */}
                   <button
-                    className={`mt-6 px-6 py-3 ${isDarkMode ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'} border-2 font-medium shadow-lg backdrop-blur-lg transition-all duration-300 rounded-lg`}
+                    className={`mt-6 px-6 py-3 bg-white/20 backdrop-blur-lg border-2 font-medium shadow-lg transition-all duration-300 rounded-lg ${
+                      isDark 
+                        ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
+                        : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
+                    }`}
                     onClick={() => setIsFlipped(false)}
                   >
                     Flip
@@ -323,7 +397,7 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Skills section - simple fade effect only */}
+        {/* Skills section */}
         <div className="w-full max-w-7xl mx-auto mb-20">
           <motion.div
             className="text-center w-full"
@@ -331,13 +405,13 @@ export default function About() {
             initial="hidden"
             animate="visible"
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 transition-colors duration-300 ${
+              isDark ? 'text-white' : 'text-black'
+            }`}>
               Skills
             </h2>
 
-    
-
-            {/* Skills display - no effects */}
+            {/* Skills display */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSkillIndex}
@@ -347,21 +421,29 @@ export default function About() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-8">
+                <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-8 transition-colors duration-300 ${
+                  isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   {skillCategories[currentSkillIndex]?.title || 'Skills'}
                 </h3>
 
-                {/* Skills grid - no effects, just static display */}
-                <div className="grid grid-cols-4 grid-rows-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto h-[400px] ">
+                {/* Skills grid */}
+                <div className="grid grid-cols-4 grid-rows-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto h-[400px]">
                   {(skillCategories[currentSkillIndex]?.skills || []).map((skill, index) => (
                     <div
                       key={`${skill.name}-${currentSkillIndex}`}
-                      className="bg-white-300/10 backdrop-blur-lg border-2 border-black/30 hover:border-white/50 rounded-lg p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 aspect-square flex flex-col items-center justify-center"
+                      className={`backdrop-blur-lg border-2 rounded-lg p-4 sm:p-6 transition-all duration-300 aspect-square flex flex-col items-center justify-center ${
+                        isDark 
+                          ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                          : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+                      }`}
                     >
                       <div className="text-2xl sm:text-3xl md:text-4xl mb-2 flex justify-center">
                         <span className={skill.color}>{skill.icon}</span>
                       </div>
-                      <p className="text-xs sm:text-sm font-medium text-center leading-tight px-1">
+                      <p className={`text-xs sm:text-sm font-medium text-center leading-tight px-1 transition-colors duration-300 ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
                         {skill.name}
                       </p>
                     </div>
@@ -376,8 +458,8 @@ export default function About() {
                       onClick={() => setCurrentSkillIndex(index)}
                       className={`w-3 h-3 rounded-full transition-all duration-300 ${
                         index === currentSkillIndex 
-                          ? 'bg-blue-300 scale-125' 
-                          : 'bg-black/30 hover:bg-white/50'
+                          ? 'bg-blue-500 scale-125' 
+                          : isDark ? 'bg-white/30 hover:bg-white/50' : 'bg-black/30 hover:bg-black/50'
                       }`}
                     />
                   ))}
@@ -395,15 +477,25 @@ export default function About() {
             initial="hidden"
             animate="visible"
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-8 transition-colors duration-300 ${
+              isDark ? 'text-white' : 'text-black'
+            }`}>
               Projects
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {/* Project Card 1 */}
-              <div className="bg-white/10 backdrop-blur-lg border-2 border-black/30 hover:border-white/50 rounded-lg p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                isDark 
+                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+              }`}>
                 <div className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Portfolio Website</h3>
-                  <p className="text-secondary-foreground text-sm leading-relaxed">
+                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>Portfolio Website</h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
+                  }`}>
                     A modern, responsive portfolio website built with Next.js and Tailwind CSS featuring smooth animations and glassmorphism design.
                   </p>
                 </div>
@@ -413,20 +505,36 @@ export default function About() {
                   <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs border border-purple-400/30">Framer Motion</span>
                 </div>
                 <div className="flex gap-3">
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     Live Demo
                   </button>
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     GitHub
                   </button>
                 </div>
               </div>
 
               {/* Project Card 2 */}
-              <div className="bg-white/10 backdrop-blur-lg border-2 border-black/30 hover:border-white/50 rounded-lg p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                isDark 
+                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+              }`}>
                 <div className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">E-Commerce App</h3>
-                  <p className="text-secondary-foreground text-sm leading-relaxed">
+                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>E-Commerce App</h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
+                  }`}>
                     A full-stack e-commerce application with user authentication, shopping cart, and payment integration using modern technologies.
                   </p>
                 </div>
@@ -436,20 +544,36 @@ export default function About() {
                   <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs border border-green-400/30">MongoDB</span>
                 </div>
                 <div className="flex gap-3">
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     Live Demo
                   </button>
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     GitHub
                   </button>
                 </div>
               </div>
 
               {/* Project Card 3 */}
-              <div className="bg-white/10 backdrop-blur-lg border-2 border-black/30 hover:border-white/50 rounded-lg p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                isDark 
+                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+              }`}>
                 <div className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Task Management</h3>
-                  <p className="text-secondary-foreground text-sm leading-relaxed">
+                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>Task Management</h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
+                  }`}>
                     A collaborative task management tool with real-time updates, drag-and-drop functionality, and team collaboration features.
                   </p>
                 </div>
@@ -459,10 +583,18 @@ export default function About() {
                   <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs border border-purple-400/30">Socket.io</span>
                 </div>
                 <div className="flex gap-3">
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     Live Demo
                   </button>
-                  <button className="flex-1 px-3 py-2 bg-white/20 hover:bg-white/30 border-2 border-white/30 hover:border-white/50 rounded text-sm transition-all duration-200">
+                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                    isDark 
+                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                  }`}>
                     GitHub
                   </button>
                 </div>

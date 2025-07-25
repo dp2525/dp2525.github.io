@@ -7,16 +7,23 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 const texts = ['Web Developer', 'Frontend Developer'];
 
 /* ---------- component ---------- */
 export default function Home() {
   const router = useRouter();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [typedText, setTypedText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /*  animations */
   const topElementVariants = {
@@ -101,25 +108,80 @@ export default function Home() {
     document.head.appendChild(linkMp4);
   }, []);
 
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
+  const isDark = resolvedTheme === 'dark';
+
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20">
+    <div className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20 transition-colors duration-300 ${
+      isDark ? 'bg-gray-900' : 'bg-white'
+    }`}>
       {/* big blurred footer word - Fixed for mobile */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
         <div
-          className="bg-gradient-to-b from-neutral-500/20 to-neutral-500/0 bg-clip-text text-[4rem] leading-none font-black text-transparent select-none xs:text-[5rem] sm:text-[8rem] md:text-[10rem] lg:text-[16rem]"
+          className={`bg-gradient-to-b ${
+            isDark 
+              ? 'from-gray-400/20 to-gray-400/0' 
+              : 'from-neutral-500/20 to-neutral-500/0'
+          } bg-clip-text text-[4rem] leading-none font-black text-transparent select-none xs:text-[5rem] sm:text-[8rem] md:text-[10rem] lg:text-[16rem] transition-colors duration-300`}
           style={{ marginBottom: '-1rem' }}
         >
           Dhvani
         </div>
       </div>
 
-      {/* GitHub button */}
-      <div className="absolute top-6 right-8 z-20">
+      {/* Navigation buttons - Responsive layout */}
+      <div className="absolute top-6 right-8 z-20 flex flex-row sm:flex-col gap-3">
         <GithubButton
           size={'custom'}
           repoUrl="https://github.com/dp2525/dp2525.github.io"
-          className="border-black hover:border-black"
+          className={`transition-colors duration-300 ${
+            isDark ? 'border-white hover:border-white' : 'border-black hover:border-black'
+          }`}
         />
+
+        {/* Dark mode toggle */}
+        <motion.button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className={`px-4 py-2 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
+            isDark 
+              ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' 
+              : 'bg-white/30 hover:bg-white/50 border-black text-black'
+          }`}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {isDark ? (
+            <motion.svg 
+              className="w-4 h-4" 
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+            >
+              <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
+            </motion.svg>
+          ) : (
+            <motion.svg 
+              className="w-4 h-4" 
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: -360 }}
+              transition={{ duration: 0.5 }}
+            >
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </motion.svg>
+          )}
+        </motion.button>
       </div>
 
       {/* header */}
@@ -133,13 +195,19 @@ export default function Home() {
           <WelcomeModal />
         </div>
 
-        <h2 className="text-secondary-foreground mt-1 text-xl font-semibold md:text-2xl">
+        <h2 className={`mt-1 text-xl font-semibold md:text-2xl transition-colors duration-300 ${
+          isDark ? 'text-gray-300' : 'text-secondary-foreground'
+        }`}>
           Hey, I'm 
         </h2>
-        <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className={`text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl transition-colors duration-300 ${
+          isDark ? 'text-white' : 'text-black'
+        }`}>
           Dhvani Patel👋
         </h1>
-        <h3 className="text-secondary-foreground mt-2 text-xl font-medium md:text-2xl -85">
+        <h3 className={`mt-2 text-xl font-medium md:text-2xl transition-colors duration-300 ${
+          isDark ? 'text-gray-300' : 'text-secondary-foreground'
+        }`}>
           {typedText}
           <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`}>|</span>
         </h3>
@@ -165,7 +233,11 @@ export default function Home() {
       {/* button */}
       <motion.button 
         onClick={() => router.push('/about')}
-        className="group relative z-20 mt-2 px-8 py-4 bg-white/40 backdrop-blur-lg hover:bg-white/50 border border-black hover:border-black text-black font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 active:scale-95"
+        className={`group relative z-20 mt-2 px-8 py-4 backdrop-blur-lg border font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 active:scale-95 ${
+          isDark 
+            ? 'bg-gray-800/40 hover:bg-gray-800/50 border-white text-white' 
+            : 'bg-white/40 hover:bg-white/50 border-black text-black'
+        }`}
         variants={bottomElementVariants}
         initial="hidden"
         animate="visible"
