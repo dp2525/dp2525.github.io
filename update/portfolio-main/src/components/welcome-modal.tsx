@@ -64,7 +64,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
                   Welcome to Dhvani's Portfolio
                 </DialogTitle>
                 <DialogDescription className="mt-2 text-base text-muted-foreground">
-                  Full Stack Developer & UI/UX Enthusiast
+                  Full Stack Developer & Frontend enthusiast
                 </DialogDescription>
               </div>
               <Button
@@ -170,13 +170,27 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
 
             {/* Footer */}
             <div className="flex flex-col items-center px-8 pt-4 pb-4 md:pb-8">
-              <Button
-                onClick={() => setIsOpen(false)}
-                className="h-auto rounded-full px-8 py-3 bg-primary text-primary-foreground hover:bg-primary/90"
-                size="lg"
-              >
-                Explore My Portfolio
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  className="flex-1 h-auto rounded-full px-8 py-3 bg-primary text-primary-foreground hover:bg-primary/90"
+                  size="lg"
+                >
+                  Explore My Portfolio
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    setIsOpen(false);
+                    // Open email client
+                    window.location.href = 'mailto:dhvanipatel11@outlook.com?subject=Hello%20Dhvani&body=Hi%20Dhvani,%0A%0AI%20visited%20your%20portfolio%20and%20would%20like%20to%20connect.%0A%0A';
+                  }}
+                  className="flex-1 h-auto rounded-full px-8 py-3 bg-primary text-primary-foreground hover:bg-primary/90"
+                  size="lg"
+                >
+                  Contact Me
+                </Button>
+              </div>
               <div className="mt-4 text-center">
                 <p className="text-muted-foreground text-sm">
                   Thank you for visiting! I hope you enjoy exploring my work. 
