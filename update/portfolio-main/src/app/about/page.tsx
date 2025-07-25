@@ -20,7 +20,8 @@ export default function About() {
   const router = useRouter();
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false); // Add flip state
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Add dark mode state
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -108,10 +109,10 @@ export default function About() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className={`relative min-h-screen w-full overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'} transition-colors duration-300`}>
       {/* Background text */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center overflow-hidden z-0">
-        <div className="bg-gradient-to-b from-neutral-500/20 to-neutral-500/0 bg-clip-text text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] leading-none font-black text-transparent select-none">
+        <div className={`bg-gradient-to-b ${isDarkMode ? 'from-neutral-400/20 to-neutral-400/0' : 'from-neutral-500/20 to-neutral-500/0'} bg-clip-text text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] leading-none font-black text-transparent select-none transition-colors duration-300`}>
           Dhvani
         </div>
       </div>
@@ -121,25 +122,43 @@ export default function About() {
         <GithubButton
           size="custom"
           repoUrl="https://github.com/dp2525/dp2525.github.io"
-          className="border-black hover:border-black"
+          className={`${isDarkMode ? 'border-white hover:border-white' : 'border-black hover:border-black'}`}
         />
 
-        {/* Container for LinkedIn and Home buttons */}
+        {/* Container for all buttons */}
         <div className="flex flex-row sm:flex-col gap-3">
+          {/* Dark Mode Toggle */}
+          <motion.button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center`}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDarkMode ? (
+              // Sun icon for light mode
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              // Moon icon for dark mode  
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            )}
+          </motion.button>
+
           {/* LinkedIn button */}
           <motion.button
             onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
-            className="px-4 py-2 bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black text-black font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center"
+            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             title="LinkedIn"
           >
-            <svg 
-              className="w-4 h-4" 
-              fill="currentColor" 
-              viewBox="0 0 20 20"
-            >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
             </svg>
           </motion.button>
@@ -147,7 +166,7 @@ export default function About() {
           {/* Home button */}
           <motion.button
             onClick={() => router.push('/')}
-            className="px-4 py-2 bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black text-black font-medium rounded-lg transition-all duration-300 shadow-lg"
+            className={`px-4 py-2 ${isDarkMode ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' : 'bg-white/30 hover:bg-white/50 border-black text-black'} backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -198,11 +217,11 @@ export default function About() {
                     transform: "rotateY(0deg)"
                   }}
                 >
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
                     About Me
                   </h2>
-                  <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-black/50 to-transparent mb-6"></div>
-                  <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed text-justify space-y-4">
+                  <div className={`w-full h-0.5 bg-gradient-to-r from-transparent ${isDarkMode ? 'via-white/50' : 'via-black/50'} to-transparent mb-6 transition-colors duration-300`}></div>
+                  <div className={`${isDarkMode ? 'text-gray-300' : 'text-secondary-foreground'} text-lg md:text-xl leading-relaxed text-justify space-y-4 transition-colors duration-300`}>
                     <p>
                       I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
                     </p>
@@ -219,7 +238,7 @@ export default function About() {
                   {/* Flip button - centered */}
                   <div className="flex justify-center mt-6">
                     <button
-                      className="px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-black/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
+                      className={`px-6 py-3 ${isDarkMode ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'} border-2 font-medium shadow-lg backdrop-blur-lg transition-all duration-300 rounded-lg`}
                       onClick={() => setIsFlipped(true)}
                     >
                       Flip
@@ -238,41 +257,41 @@ export default function About() {
                     transform: "rotateY(180deg)"
                   }}
                 >
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
                     Education
                   </h2>
-                  <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed space-y-6">
+                  <div className={`${isDarkMode ? 'text-gray-300' : 'text-secondary-foreground'} text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300`}>
                     {/* Education Item 1 */}
                     <div className="border-l-4 border-pink-400 pl-6 py-2">
-                      <h3 className="text-xl font-semibold text-black mb-2">
+                      <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
                         Post Graduation - Full Stack Software Development
                       </h3>
-                      <p className="text-black-300 font-medium mb-1">
+                      <p className={`font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-black-300'} transition-colors duration-300`}>
                         Lambton College | 2020 - 2024
                       </p>
                     </div>
 
                     {/* Education Item 2 */}
                     <div className="border-l-4 border-black-400 pl-6 py-2">
-                      <h3 className="text-xl font-semibold text-black mb-2">
+                      <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>
                         Bachelor of Engineering - Computer Engineering
                       </h3>
-                      <p className="text-black-300 font-medium mb-1">
+                      <p className={`font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-black-300'} transition-colors duration-300`}>
                         Gujarat Technological University | 2016 - 2020
                       </p>
                     </div>
 
                     {/* Certifications */}
                     <div className="mt-6">
-                      <h4 className="text-lg font-semibold text-black mb-3">Certifications</h4>
+                      <h4 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-black'} transition-colors duration-300`}>Certifications</h4>
                       <div className="flex flex-wrap gap-2">
-                        <span className="px-3 py-1 bg-blue-500/20 text-black-300 rounded-full text-sm border border-blue-400/30">
+                        <span className={`px-3 py-1 bg-blue-500/20 rounded-full text-sm border border-blue-400/30 ${isDarkMode ? 'text-blue-300' : 'text-black-300'} transition-colors duration-300`}>
                           React Developer
                         </span>
-                        <span className="px-3 py-1 bg-green-500/20 text-black-300 rounded-full text-sm border border-green-400/30">
+                        <span className={`px-3 py-1 bg-green-500/20 rounded-full text-sm border border-green-400/30 ${isDarkMode ? 'text-green-300' : 'text-black-300'} transition-colors duration-300`}>
                           JavaScript ES6+
                         </span>
-                        <span className="px-3 py-1 bg-purple-500/20 text-black-300 rounded-full text-sm border border-purple-400/30">
+                        <span className={`px-3 py-1 bg-purple-500/20 rounded-full text-sm border border-purple-400/30 ${isDarkMode ? 'text-purple-300' : 'text-black-300'} transition-colors duration-300`}>
                           Web Development
                         </span>
                       </div>
@@ -280,13 +299,12 @@ export default function About() {
                   </div>
 
                   {/* Back button */}
-                    <button
-                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-black/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
-                      onClick={() => setIsFlipped(false)}
-                    >
-                      Flip
-                    </button>
-                  
+                  <button
+                    className={`mt-6 px-6 py-3 ${isDarkMode ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'} border-2 font-medium shadow-lg backdrop-blur-lg transition-all duration-300 rounded-lg`}
+                    onClick={() => setIsFlipped(false)}
+                  >
+                    Flip
+                  </button>
                 </div>
               </motion.div>
             </div>
