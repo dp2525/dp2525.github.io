@@ -1,5 +1,5 @@
 'use client';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 interface AboutSectionsProps {
@@ -12,13 +12,6 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
-  // Simple flip animation
-  const flipVariants = {
-    hidden: { opacity: 0, rotateY: -90 },
-    visible: { opacity: 1, rotateY: 0, transition: { duration: 0.5 } },
-    exit: { opacity: 0, rotateY: 90, transition: { duration: 0.3 } }
   };
 
   const sectionData = {
@@ -197,126 +190,312 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
   return (
     <div className="w-full max-w-6xl mx-auto mb-16">
       <motion.div
-        className="relative w-full min-h-[500px]"
-        style={{ perspective: "1000px" }}
+        className="relative w-full min-h-[500px] perspective-1000"
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
       >
-        <AnimatePresence mode="wait">
-          {/* About Me Section */}
-          {currentSection === 0 && (
-            <motion.div
-              key="about"
-              variants={flipVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
-            >
-              <div className={`order-2 lg:order-1 ${
-                isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
-              } transition-all duration-300`}>
-                <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
-                  isDark ? 'text-white' : 'text-black'
-                }`}>
-                  {sectionData.about.title}
-                </h2>
-                
-                <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
-                  isDark ? 'via-white/60' : 'via-black/50'
-                }`}></div>
-                
-                {sectionData.about.content}
-                {getNavigationButtons()}
-              </div>
+        {/* About Me Section - Mobile: Image first, Desktop: Left/Right Layout */}
+        {currentSection === 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Mobile: Image appears first, Desktop: About content on left */}
+            <div className={`order-2 lg:order-1 ${
+              isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
+            } transition-all duration-300`}>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                isDark ? 'text-white' : 'text-black'
+              }`}>
+                {sectionData.about.title}
+              </h2>
+              
+              <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
+                isDark ? 'via-white/60' : 'via-black/50'
+              }`}></div>
+              
+              {sectionData.about.content}
+              {getNavigationButtons()}
+            </div>
 
-              <div className="order-1 lg:order-2 relative h-[400px] lg:h-[500px] rounded-xl transition-all duration-300 flex items-center justify-center overflow-hidden">
-                <img 
-                  src="/about.png" 
-                  alt="About Dhvani Patel" 
-                  className="w-full h-full object-contain rounded-xl relative z-10"
-                />
-                
-                {/* Just 3 Floating Elements */}
-                <motion.div
-                  className="absolute top-16 right-8 text-2xl z-20"
-                  animate={{
-                    y: [0, -15, 0],
-                    rotate: [0, 10, 0],
-                    scale: [1, 1.3, 1]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  🌟🚀 
-                </motion.div>
-                
-                <motion.div
-                  className="absolute bottom-24 left-8 text-xl z-20"
-                  animate={{
-                    y: [0, -20, 0],
-                    x: [0, 10, 0],
-                    rotate: [0, 45, -45, 0]
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
-                  }}
-                >
-                  ✨
-                </motion.div>
-                
-                <motion.div
-                  className="absolute top-40 left-4 text-lg z-20"
-                  animate={{
-                    y: [0, -12, 0],
-                    scale: [1, 1.4, 1],
-                    opacity: [0.7, 1, 0.7]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 2
-                  }}
-                >
-                  💫
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
+            {/* Mobile: Image appears first, Desktop: Image on right */}
+            <div className="order-1 lg:order-2 relative h-[400px] lg:h-[500px] rounded-xl transition-all duration-300 flex items-center justify-center overflow-hidden">
+              {/* Your about.png image */}
+              <img 
+                src="/about.png" 
+                alt="About Dhvani Patel" 
+                className="w-full h-full object-contain rounded-xl relative z-10"
+              />
+              
+              {/* Just 3 Floating Elements */}
+              <motion.div
+                className="absolute top-16 right-8 text-2xl z-20"
+                animate={{
+                  y: [0, -15, 0],
+                  rotate: [0, 10, 0],
+                  scale: [1, 1.3, 1]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                🌟🚀 
+              </motion.div>
+              
+              <motion.div
+                className="absolute bottom-24 left-8 text-xl z-20"
+                animate={{
+                  y: [0, -20, 0],
+                  x: [0, 10, 0],
+                  rotate: [0, 45, -45, 0]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+              >
+                ✨
+              </motion.div>
+              
+              <motion.div
+                className="absolute top-40 left-4 text-lg z-20"
+                animate={{
+                  y: [0, -12, 0],
+                  scale: [1, 1.4, 1],
+                  opacity: [0.7, 1, 0.7]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2
+                }}
+              >
+                💫
+              </motion.div>
+            </div>
+          </div>
+        )}
 
-          {/* Education and Experience Sections */}
-          {currentSection !== 0 && (
-            <motion.div
-              key={currentSectionKey}
-              variants={flipVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="relative w-full h-full"
-            >
-              <div className={`w-full ${
-                isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
-              } transition-all duration-300`}>
-                <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
-                  isDark ? 'text-white' : 'text-black'
-                }`}>
-                  {sectionData[currentSectionKey].title}
-                </h2>
-                
-                {sectionData[currentSectionKey].content}
-                {getNavigationButtons()}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Education and Experience Sections - Full Width */}
+        {currentSection !== 0 && (
+          <motion.div
+            key={currentSectionKey}
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="relative w-full h-full"
+          >
+            <div className={`w-full ${
+              isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
+            } transition-all duration-300`}>
+              
+              {/* Education section with gears */}
+              {currentSection === 1 && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                  {/* Mobile: Gears appear first, Desktop: Content takes 2 columns */}
+                  <div className="order-2 lg:order-1 lg:col-span-2">
+                    <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                      isDark ? 'text-white' : 'text-black'
+                    }`}>
+                      {sectionData.education.title}
+                    </h2>
+                    
+                    {sectionData.education.content}
+                    {getNavigationButtons()}
+                  </div>
+                  
+                  {/* Mobile: Gears appear first, Desktop: Gears take 1 column */}
+                  <div className="order-1 lg:order-2 relative h-[300px] lg:h-[600px] flex items-center justify-center">
+                    {/* Large gear */}
+                    <motion.div
+                      className={`absolute w-24 h-24 lg:w-32 lg:h-32 rounded-full border-6 lg:border-8 ${
+                        isDark ? 'border-white/30' : 'border-black/30'
+                      } flex items-center justify-center`}
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: `conic-gradient(from 0deg, ${
+                          isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                        } 0deg, transparent 45deg, ${
+                          isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                        } 90deg, transparent 135deg, ${
+                          isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                        } 180deg, transparent 225deg, ${
+                          isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+                        } 270deg, transparent 315deg)`
+                      }}
+                    >
+                      {/* Gear teeth */}
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`absolute w-3 h-6 lg:w-4 lg:h-8 ${
+                            isDark ? 'bg-white/40' : 'bg-black/40'
+                          } rounded-sm`}
+                          style={{
+                            transform: `rotate(${i * 45}deg) translateY(-${window.innerWidth >= 1024 ? '70' : '50'}px)`,
+                            transformOrigin: `50% ${window.innerWidth >= 1024 ? '70' : '50'}px`
+                          }}
+                        />
+                      ))}
+                      
+                      {/* Center hub */}
+                      <div className={`w-6 h-6 lg:w-8 lg:h-8 rounded-full ${
+                        isDark ? 'bg-white/50' : 'bg-black/50'
+                      }`} />
+                      
+                      {/* Education icon in center */}
+                      <div className="absolute text-xl lg:text-2xl">🎓</div>
+                    </motion.div>
+                    
+                    {/* Medium gear - top right */}
+                    <motion.div
+                      className={`absolute top-8 lg:top-16 right-4 lg:right-8 w-16 h-16 lg:w-20 lg:h-20 rounded-full border-4 lg:border-6 ${
+                        isDark ? 'border-white/25' : 'border-black/25'
+                      } flex items-center justify-center`}
+                      animate={{ rotate: -360 }}
+                      transition={{
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: `conic-gradient(from 0deg, ${
+                          isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                        } 0deg, transparent 60deg, ${
+                          isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                        } 120deg, transparent 180deg, ${
+                          isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                        } 240deg, transparent 300deg)`
+                      }}
+                    >
+                      {/* Gear teeth */}
+                      {[...Array(6)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`absolute w-2 h-4 lg:w-3 lg:h-6 ${
+                            isDark ? 'bg-white/30' : 'bg-black/30'
+                          } rounded-sm`}
+                          style={{
+                            transform: `rotate(${i * 60}deg) translateY(-${window.innerWidth >= 1024 ? '45' : '35'}px)`,
+                            transformOrigin: `50% ${window.innerWidth >= 1024 ? '45' : '35'}px`
+                          }}
+                        />
+                      ))}
+                      
+                      <div className={`w-4 h-4 lg:w-6 lg:h-6 rounded-full ${
+                        isDark ? 'bg-white/40' : 'bg-black/40'
+                      }`} />
+                      <div className="absolute text-sm lg:text-lg">📚</div>
+                    </motion.div>
+                    
+                    {/* Small gear - bottom left */}
+                    <motion.div
+                      className={`absolute bottom-12 lg:bottom-20 left-2 lg:left-4 w-12 h-12 lg:w-16 lg:h-16 rounded-full border-3 lg:border-4 ${
+                        isDark ? 'border-white/20' : 'border-black/20'
+                      } flex items-center justify-center`}
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: `conic-gradient(from 0deg, ${
+                          isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+                        } 0deg, transparent 72deg, ${
+                          isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+                        } 144deg, transparent 216deg, ${
+                          isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+                        } 288deg, transparent 360deg)`
+                      }}
+                    >
+                      {/* Gear teeth */}
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`absolute w-1.5 h-3 lg:w-2 lg:h-4 ${
+                            isDark ? 'bg-white/25' : 'bg-black/25'
+                          } rounded-sm`}
+                          style={{
+                            transform: `rotate(${i * 72}deg) translateY(-${window.innerWidth >= 1024 ? '35' : '26'}px)`,
+                            transformOrigin: `50% ${window.innerWidth >= 1024 ? '35' : '26'}px`
+                          }}
+                        />
+                      ))}
+                      
+                      <div className={`w-3 h-3 lg:w-4 lg:h-4 rounded-full ${
+                        isDark ? 'bg-white/35' : 'bg-black/35'
+                      }`} />
+                      <div className="absolute text-xs lg:text-sm">💡</div>
+                    </motion.div>
+                    
+                    {/* Tiny gear - middle right */}
+                    <motion.div
+                      className={`absolute top-1/2 right-8 lg:right-16 w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 lg:border-3 ${
+                        isDark ? 'border-white/15' : 'border-black/15'
+                      } flex items-center justify-center`}
+                      animate={{ rotate: -360 }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: `conic-gradient(from 0deg, ${
+                          isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'
+                        } 0deg, transparent 90deg, ${
+                          isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'
+                        } 180deg, transparent 270deg)`
+                      }}
+                    >
+                      {/* Gear teeth */}
+                      {[...Array(4)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`absolute w-1 h-2 lg:w-1.5 lg:h-3 ${
+                            isDark ? 'bg-white/20' : 'bg-black/20'
+                          } rounded-sm`}
+                          style={{
+                            transform: `rotate(${i * 90}deg) translateY(-${window.innerWidth >= 1024 ? '27' : '22'}px)`,
+                            transformOrigin: `50% ${window.innerWidth >= 1024 ? '27' : '22'}px`
+                          }}
+                        />
+                      ))}
+                      
+                      <div className={`w-2 h-2 lg:w-3 lg:h-3 rounded-full ${
+                        isDark ? 'bg-white/30' : 'bg-black/30'
+                      }`} />
+                      <div className="absolute text-xs">⚙️</div>
+                    </motion.div>
+                  </div>
+                </div>
+              )}
+
+              {/* Experience section - simple layout */}
+              {currentSection === 2 && (
+                <>
+                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>
+                    {sectionData.experience.title}
+                  </h2>
+                  
+                  {sectionData.experience.content}
+                  {getNavigationButtons()}
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );
