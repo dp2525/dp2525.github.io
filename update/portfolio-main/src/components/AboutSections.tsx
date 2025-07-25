@@ -1,5 +1,5 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 interface AboutSectionsProps {
@@ -12,6 +12,13 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
+  // Simple flip animation
+  const flipVariants = {
+    hidden: { opacity: 0, rotateY: -90 },
+    visible: { opacity: 1, rotateY: 0, transition: { duration: 0.5 } },
+    exit: { opacity: 0, rotateY: 90, transition: { duration: 0.3 } }
   };
 
   const sectionData = {
@@ -28,26 +35,26 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
       )
     },
     education: {
-      title: "Education",
+      title: "Education 🎓",
       content: (
         <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
           isDark ? 'text-gray-100' : 'text-secondary-foreground'
         }`}>
           <div className="border-l-4 border-pink-400 pl-6 py-2">
             <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'}`}>
-              Post Graduation - Full Stack Software Development
+            Post Graduation - Full Stack Software Development
             </h3>
             <p className={`font-medium mb-1 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Lambton College | 2020 - 2024
+            🏛️ Lambton College | 📅 2020 - 2024
             </p>
           </div>
 
           <div className={`border-l-4 pl-6 py-2 transition-colors duration-300 ${isDark ? 'border-white' : 'border-black-400'}`}>
             <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'}`}>
-              Bachelor of Engineering - Computer Engineering
+             Bachelor of Engineering - Computer Engineering
             </h3>
             <p className={`font-medium mb-1 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Gujarat Technological University | 2016 - 2020
+             🏛️ Gujarat Technological University | 📅 2016 - 2020
             </p>
           </div>
 
@@ -71,7 +78,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
       )
     },
     experience: {
-      title: "Experience",
+      title: "Experience 💼",
       content: (
         <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
           isDark ? 'text-gray-100' : 'text-secondary-foreground'
@@ -81,7 +88,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
               Full Stack Developer Intern
             </h3>
             <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Tech Solutions Inc. | 2024 - Present
+              🏢 Tech Solutions Inc. | 📅 2024 - Present
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Developing responsive web applications using React, Node.js, and MongoDB. Collaborated with team to improve user experience and optimize performance.
@@ -173,9 +180,12 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
         );
       case 2:
         return (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center gap-4 mt-6">
             <button className={buttonClass} onClick={() => setCurrentSection(1)}>
               ← Education
+            </button>
+            <button className={buttonClass} onClick={() => setCurrentSection(0)}>
+              About Me →
             </button>
           </div>
         );
@@ -187,42 +197,126 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
   return (
     <div className="w-full max-w-6xl mx-auto mb-16">
       <motion.div
-        className="relative w-full min-h-[500px] perspective-1000"
+        className="relative w-full min-h-[500px]"
+        style={{ perspective: "1000px" }}
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
       >
-        <div className="relative w-full h-full">
-          {sections.map((sectionKey, index) => (
-            <div
-              key={sectionKey}
-              className={`w-full ${currentSection === index ? 'opacity-100' : 'opacity-0 pointer-events-none'} ${
-                isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
-              } transition-all duration-300`}
-              style={{
-                backfaceVisibility: "hidden",
-                position: currentSection === index ? "relative" : "absolute",
-                top: 0,
-                left: 0,
-              }}
+        <AnimatePresence mode="wait">
+          {/* About Me Section */}
+          {currentSection === 0 && (
+            <motion.div
+              key="about"
+              variants={flipVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
             >
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
-                isDark ? 'text-white' : 'text-black'
-              }`}>
-                {sectionData[sectionKey].title}
-              </h2>
-              
-              {currentSection === 0 && (
+              <div className={`order-2 lg:order-1 ${
+                isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
+              } transition-all duration-300`}>
+                <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}>
+                  {sectionData.about.title}
+                </h2>
+                
                 <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
                   isDark ? 'via-white/60' : 'via-black/50'
                 }`}></div>
-              )}
-              
-              {sectionData[sectionKey].content}
-              {getNavigationButtons()}
-            </div>
-          ))}
-        </div>
+                
+                {sectionData.about.content}
+                {getNavigationButtons()}
+              </div>
+
+              <div className="order-1 lg:order-2 relative h-[400px] lg:h-[500px] rounded-xl transition-all duration-300 flex items-center justify-center overflow-hidden">
+                <img 
+                  src="/about.png" 
+                  alt="About Dhvani Patel" 
+                  className="w-full h-full object-contain rounded-xl relative z-10"
+                />
+                
+                {/* Just 3 Floating Elements */}
+                <motion.div
+                  className="absolute top-16 right-8 text-2xl z-20"
+                  animate={{
+                    y: [0, -15, 0],
+                    rotate: [0, 10, 0],
+                    scale: [1, 1.3, 1]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  🌟🚀 
+                </motion.div>
+                
+                <motion.div
+                  className="absolute bottom-24 left-8 text-xl z-20"
+                  animate={{
+                    y: [0, -20, 0],
+                    x: [0, 10, 0],
+                    rotate: [0, 45, -45, 0]
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1
+                  }}
+                >
+                  ✨
+                </motion.div>
+                
+                <motion.div
+                  className="absolute top-40 left-4 text-lg z-20"
+                  animate={{
+                    y: [0, -12, 0],
+                    scale: [1, 1.4, 1],
+                    opacity: [0.7, 1, 0.7]
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2
+                  }}
+                >
+                  💫
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Education and Experience Sections */}
+          {currentSection !== 0 && (
+            <motion.div
+              key={currentSectionKey}
+              variants={flipVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="relative w-full h-full"
+            >
+              <div className={`w-full ${
+                isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : 'p-6'
+              } transition-all duration-300`}>
+                <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}>
+                  {sectionData[currentSectionKey].title}
+                </h2>
+                
+                {sectionData[currentSectionKey].content}
+                {getNavigationButtons()}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
