@@ -243,7 +243,7 @@ export default function About() {
                 {/* About Me - Front side with glass effect */}
                 <div
                   className={`w-full ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'} ${
-                    isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6' : ''
+                    isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : ''
                   } transition-all duration-300`}
                   style={{
                     backfaceVisibility: "hidden",
@@ -259,10 +259,10 @@ export default function About() {
                     About Me
                   </h2>
                   <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
-                    isDark ? 'via-white/50' : 'via-black/50'
+                    isDark ? 'via-white/60' : 'via-black/50'
                   }`}></div>
                   <div className={`text-lg md:text-xl leading-relaxed text-justify space-y-4 transition-colors duration-300 ${
-                    isDark ? 'text-gray-200' : 'text-secondary-foreground'
+                    isDark ? 'text-gray-100' : 'text-secondary-foreground'
                   }`}>
                     <p>
                       I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
@@ -295,7 +295,7 @@ export default function About() {
                 {/* Education - Back side with glass effect */}
                 <div
                   className={`w-full ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'} ${
-                    isDark ? 'bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6' : ''
+                    isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : ''
                   } transition-all duration-300`}
                   style={{
                     backfaceVisibility: "hidden",
@@ -311,7 +311,7 @@ export default function About() {
                     Education
                   </h2>
                   <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
-                    isDark ? 'text-gray-200' : 'text-secondary-foreground'
+                    isDark ? 'text-gray-100' : 'text-secondary-foreground'
                   }`}>
                     {/* Education Item 1 */}
                     <div className="border-l-4 border-pink-400 pl-6 py-2">
@@ -321,7 +321,7 @@ export default function About() {
                         Post Graduation - Full Stack Software Development
                       </h3>
                       <p className={`font-medium mb-1 transition-colors duration-300 ${
-                        isDark ? 'text-gray-300' : 'text-black-300'
+                        isDark ? 'text-gray-200' : 'text-black-300'
                       }`}>
                         Lambton College | 2020 - 2024
                       </p>
@@ -337,7 +337,7 @@ export default function About() {
                         Bachelor of Engineering - Computer Engineering
                       </h3>
                       <p className={`font-medium mb-1 transition-colors duration-300 ${
-                        isDark ? 'text-gray-300' : 'text-black-300'
+                        isDark ? 'text-gray-200' : 'text-black-300'
                       }`}>
                         Gujarat Technological University | 2016 - 2020
                       </p>
@@ -350,17 +350,17 @@ export default function About() {
                       }`}>Certifications</h4>
                       <div className="flex flex-wrap gap-2">
                         <span className={`px-3 py-1 bg-blue-500/20 rounded-full text-sm border border-blue-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-blue-300' : 'text-black-300'
+                          isDark ? 'text-blue-200' : 'text-black-300'
                         }`}>
                           React Developer
                         </span>
                         <span className={`px-3 py-1 bg-green-500/20 rounded-full text-sm border border-green-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-green-300' : 'text-black-300'
+                          isDark ? 'text-green-200' : 'text-black-300'
                         }`}>
                           JavaScript ES6+
                         </span>
                         <span className={`px-3 py-1 bg-purple-500/20 rounded-full text-sm border border-purple-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-purple-300' : 'text-black-300'
+                          isDark ? 'text-purple-200' : 'text-black-300'
                         }`}>
                           Web Development
                         </span>
@@ -604,7 +604,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* FluidCursor - only render if mounted */}
+      {/* FluidCursor - only render once at the end */}
       {mounted && <FluidCursor />}
     </div>
   );

@@ -94,18 +94,15 @@ export default function Home() {
     const img = new window.Image();
     img.src = '/pic.png';
 
-    // Preload videos
-    const linkWebm = document.createElement('link');
-    linkWebm.rel = 'preload';
-    linkWebm.as = 'video';
-    linkWebm.href = '/final_memojis.webm';
-    document.head.appendChild(linkWebm);
-
-    const linkMp4 = document.createElement('link');
-    linkMp4.rel = 'prefetch';
-    linkMp4.as = 'video';
-    linkMp4.href = '/final_memojis_ios.mp4';
-    document.head.appendChild(linkMp4);
+    // Remove the unsupported preload links - just preload the images directly
+    const preloadVideo = () => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.src = '/final_memojis.webm';
+      video.load();
+    };
+    
+    preloadVideo();
   }, []);
 
   // Prevent hydration mismatch
@@ -256,7 +253,8 @@ export default function Home() {
         <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </motion.button>
 
-      <FluidCursor />
+      {/* Render FluidCursor conditionally based on mounted state and window width */}
+      {mounted && typeof window !== 'undefined' && window.innerWidth >= 1024 && <FluidCursor />}
     </div>
   );
 }
