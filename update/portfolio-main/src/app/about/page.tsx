@@ -117,34 +117,55 @@ export default function About() {
       </div>
 
       {/* Navigation buttons */}
-      <div className="fixed top-4 right-4 z-20 flex flex-col gap-3">
+      <div className="absolute top-4 right-4 z-20 flex flex-row sm:flex-col gap-3">
         <GithubButton
           size="custom"
           repoUrl="https://github.com/dp2525/dp2525.github.io"
           className="border-black hover:border-black"
         />
 
-        {/* Simplified Home button */}
-        <motion.button
-          onClick={() => router.push('/')}
-          className="px-4 py-2 bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black text-black font-medium rounded-lg transition-all duration-300 shadow-lg"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          title="Home"
-        >
-          <img 
-            src="/logo.svg" 
-            alt="Home" 
-            className="w-4 h-4"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              if (e.currentTarget.parentElement) {
-                e.currentTarget.parentElement.textContent = 'Home';
-              }
-            }}
-          />
-        </motion.button>
+        {/* Container for LinkedIn and Home buttons */}
+        <div className="flex flex-row sm:flex-col gap-3">
+          {/* LinkedIn button */}
+          <motion.button
+            onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
+            className="px-4 py-2 bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black text-black font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            title="LinkedIn"
+          >
+            <svg 
+              className="w-4 h-4" 
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+            >
+              <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
+            </svg>
+          </motion.button>
+
+          {/* Home button */}
+          <motion.button
+            onClick={() => router.push('/')}
+            className="px-4 py-2 bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black text-black font-medium rounded-lg transition-all duration-300 shadow-lg"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            title="Home"
+          >
+            <img 
+              src="/logo.svg" 
+              alt="Home" 
+              className="w-4 h-4"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                if (e.currentTarget.parentElement) {
+                  e.currentTarget.parentElement.textContent = 'Home';
+                }
+              }}
+            />
+          </motion.button>
+        </div>
       </div>
 
       {/* Main content */}
@@ -180,6 +201,7 @@ export default function About() {
                   <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                     About Me
                   </h2>
+                  <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-black/50 to-transparent mb-6"></div>
                   <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed text-justify space-y-4">
                     <p>
                       I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
@@ -194,13 +216,15 @@ export default function About() {
                     </p>
                   </div>
 
-                  {/* Flip button */}
-                  <button
-                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-white/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
-                    onClick={() => setIsFlipped(true)}
-                  >
-                    Flip
-                  </button>
+                  {/* Flip button - centered */}
+                  <div className="flex justify-center mt-6">
+                    <button
+                      className="px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-black/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
+                      onClick={() => setIsFlipped(true)}
+                    >
+                      Flip
+                    </button>
+                  </div>
                 </div>
 
                 {/* Education - Back side */}
@@ -219,30 +243,22 @@ export default function About() {
                   </h2>
                   <div className="text-secondary-foreground text-lg md:text-xl leading-relaxed space-y-6">
                     {/* Education Item 1 */}
-                    <div className="border-l-4 border-black-400 pl-6 py-2">
+                    <div className="border-l-4 border-pink-400 pl-6 py-2">
                       <h3 className="text-xl font-semibold text-black mb-2">
-                        Bachelor of Engineering - Computer Engineering
+                        Post Graduation - Full Stack Software Development
                       </h3>
                       <p className="text-black-300 font-medium mb-1">
-                        University Name | 2020 - 2024
-                      </p>
-                      <p className="text-sm text-black-300">
-                        Focused on software development, data structures, algorithms, and web technologies. 
-                        Graduated with honors and completed multiple projects in full-stack development.
+                        Lambton College | 2020 - 2024
                       </p>
                     </div>
 
                     {/* Education Item 2 */}
                     <div className="border-l-4 border-black-400 pl-6 py-2">
                       <h3 className="text-xl font-semibold text-black mb-2">
-                        Higher Secondary Education
+                        Bachelor of Engineering - Computer Engineering
                       </h3>
                       <p className="text-black-300 font-medium mb-1">
-                        School Name | 2018 - 2020
-                      </p>
-                      <p className="text-sm text-black-300">
-                        Specialized in Science stream with Mathematics, Physics, and Computer Science. 
-                        Achieved excellent grades and developed foundational programming skills.
+                        Gujarat Technological University | 2016 - 2020
                       </p>
                     </div>
 
@@ -264,12 +280,13 @@ export default function About() {
                   </div>
 
                   {/* Back button */}
-                  <button
-                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-white/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
-                    onClick={() => setIsFlipped(false)}
-                  >
-                    Flip
-                  </button>
+                    <button
+                    className="mt-6 px-6 py-3 bg-white/20 hover:bg-white/30 border-2 border-black/30 hover:border-black/50 rounded-lg text-black font-medium shadow-lg backdrop-blur-lg transition-colors duration-300"
+                      onClick={() => setIsFlipped(false)}
+                    >
+                      Flip
+                    </button>
+                  
                 </div>
               </motion.div>
             </div>
