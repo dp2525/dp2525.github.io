@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import dynamic from 'next/dynamic';
+import AboutSections from '@/components/AboutSections';
 
 // Dynamically import components that might cause issues
 const FluidCursor = dynamic(() => import('@/components/FluidCursor'), { 
@@ -22,7 +23,6 @@ export default function About() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -77,17 +77,10 @@ export default function About() {
     if (!mounted) return;
     
     const interval = setInterval(() => {
-      setCurrentSkillIndex((prev) => {
-        const next = (prev + 1) % skillCategories.length;
-        return next;
-      });
+      setCurrentSkillIndex((prev) => (prev + 1) % skillCategories.length);
     }, 6600);
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
+    return () => clearInterval(interval);
   }, [mounted, skillCategories.length]);
 
   // Simplified animations
@@ -96,15 +89,8 @@ export default function About() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
-  const fadeInLeft = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.2 } }
-  };
-
   // Prevent hydration mismatch
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   const isDark = resolvedTheme === 'dark';
 
@@ -151,25 +137,11 @@ export default function About() {
             whileTap={{ scale: 0.95 }}
           >
             {isDark ? (
-              <motion.svg 
-                className="w-4 h-4" 
-                fill="currentColor" 
-                viewBox="0 0 20 20"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-              >
+              <motion.svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" initial={{ rotate: 0 }} animate={{ rotate: 360 }} transition={{ duration: 0.5 }}>
                 <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
               </motion.svg>
             ) : (
-              <motion.svg 
-                className="w-4 h-4" 
-                fill="currentColor" 
-                viewBox="0 0 20 20"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: -360 }}
-                transition={{ duration: 0.5 }}
-              >
+              <motion.svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" initial={{ rotate: 0 }} animate={{ rotate: -360 }} transition={{ duration: 0.5 }}>
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
               </motion.svg>
             )}
@@ -224,178 +196,8 @@ export default function About() {
       {/* Main content */}
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 pt-20 pb-10">
         
-        {/* About Me / Education section with flip */}
-        <motion.div
-          className="w-full max-w-7xl mx-auto mb-20"
-          variants={fadeInLeft}
-          initial="hidden"
-          animate="visible"
-        >
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-            {/* Flip container with 3D animation - Added glass background */}
-            <div className="flex-1 max-w-3xl lg:max-w-2xl text-left relative" style={{ perspective: "1000px" }}>
-              <motion.div
-                className="relative w-full"
-                animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                {/* About Me - Front side with glass effect */}
-                <div
-                  className={`w-full ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'} ${
-                    isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : ''
-                  } transition-all duration-300`}
-                  style={{
-                    backfaceVisibility: "hidden",
-                    position: isFlipped ? "absolute" : "relative",
-                    top: 0,
-                    left: 0,
-                    transform: "rotateY(0deg)"
-                  }}
-                >
-                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>
-                    About Me
-                  </h2>
-                  <div className={`w-full h-0.5 bg-gradient-to-r from-transparent to-transparent mb-6 transition-colors duration-300 ${
-                    isDark ? 'via-white/60' : 'via-black/50'
-                  }`}></div>
-                  <div className={`text-lg md:text-xl leading-relaxed text-justify space-y-4 transition-colors duration-300 ${
-                    isDark ? 'text-gray-100' : 'text-secondary-foreground'
-                  }`}>
-                    <p>
-                      I believe that life is a constant learning process and I have always had a hunger for learning new concepts.
-                    </p>
-                    <p>
-                      School time was a period of life when I discovered my interests and dared to dream. 
-                      Ever since I could remember, I have always loved the Computers. Whether it was secretly playing games on my father's work computer or through the weekly 2-hour computer laboratory sessions at school, 
-                      I developed my passion for the field of Computer Engineering.
-                    </p>
-                    <p>
-                      I'm passionate about web development and creating intuitive user experiences. I have experience in building responsive and interactive web applications using modern technologies like React, Next.js, Tailwind CSS and more.
-                    </p>
-                  </div>
-
-                  {/* Flip button - centered */}
-                  <div className="flex justify-center mt-6">
-                    <button
-                      className={`px-6 py-3 bg-white/20 backdrop-blur-lg border-2 font-medium shadow-lg transition-all duration-300 rounded-lg ${
-                        isDark 
-                          ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
-                          : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-                      }`}
-                      onClick={() => setIsFlipped(true)}
-                    >
-                      Flip
-                    </button>
-                  </div>
-                </div>
-
-                {/* Education - Back side with glass effect */}
-                <div
-                  className={`w-full ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'} ${
-                    isDark ? 'bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6' : ''
-                  } transition-all duration-300`}
-                  style={{
-                    backfaceVisibility: "hidden",
-                    position: isFlipped ? "relative" : "absolute",
-                    top: 0,
-                    left: 0,
-                    transform: "rotateY(180deg)"
-                  }}
-                >
-                  <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>
-                    Education
-                  </h2>
-                  <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
-                    isDark ? 'text-gray-100' : 'text-secondary-foreground'
-                  }`}>
-                    {/* Education Item 1 */}
-                    <div className="border-l-4 border-pink-400 pl-6 py-2">
-                      <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                        isDark ? 'text-white' : 'text-black'
-                      }`}>
-                        Post Graduation - Full Stack Software Development
-                      </h3>
-                      <p className={`font-medium mb-1 transition-colors duration-300 ${
-                        isDark ? 'text-gray-200' : 'text-black-300'
-                      }`}>
-                        Lambton College | 2020 - 2024
-                      </p>
-                    </div>
-
-                    {/* Education Item 2 */}
-                    <div className={`border-l-4 pl-6 py-2 transition-colors duration-300 ${
-                      isDark ? 'border-white' : 'border-black-400'
-                    }`}>
-                      <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                        isDark ? 'text-white' : 'text-black'
-                      }`}>
-                        Bachelor of Engineering - Computer Engineering
-                      </h3>
-                      <p className={`font-medium mb-1 transition-colors duration-300 ${
-                        isDark ? 'text-gray-200' : 'text-black-300'
-                      }`}>
-                        Gujarat Technological University | 2016 - 2020
-                      </p>
-                    </div>
-
-                    {/* Certifications */}
-                    <div className="mt-6">
-                      <h4 className={`text-lg font-semibold mb-3 transition-colors duration-300 ${
-                        isDark ? 'text-white' : 'text-black'
-                      }`}>Certifications</h4>
-                      <div className="flex flex-wrap gap-2">
-                        <span className={`px-3 py-1 bg-blue-500/20 rounded-full text-sm border border-blue-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-blue-200' : 'text-black-300'
-                        }`}>
-                          React Developer
-                        </span>
-                        <span className={`px-3 py-1 bg-green-500/20 rounded-full text-sm border border-green-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-green-200' : 'text-black-300'
-                        }`}>
-                          JavaScript ES6+
-                        </span>
-                        <span className={`px-3 py-1 bg-purple-500/20 rounded-full text-sm border border-purple-400/30 transition-colors duration-300 ${
-                          isDark ? 'text-purple-200' : 'text-black-300'
-                        }`}>
-                          Web Development
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Back button */}
-                  <button
-                    className={`mt-6 px-6 py-3 bg-white/20 backdrop-blur-lg border-2 font-medium shadow-lg transition-all duration-300 rounded-lg ${
-                      isDark 
-                        ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
-                        : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-                    }`}
-                    onClick={() => setIsFlipped(false)}
-                  >
-                    Flip
-                  </button>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Image - right side (stays the same) */}
-            <div className="flex-shrink-0 lg:ml-auto">
-              <img
-                src="/about.png"
-                alt="About Me"
-                className="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </div>
-          </div>
-        </motion.div>
+        {/* About Me / Education / Experience Sections Component */}
+        <AboutSections isDark={isDark} />
 
         {/* Skills section */}
         <div className="w-full max-w-7xl mx-auto mb-20">
@@ -422,7 +224,7 @@ export default function About() {
                 transition={{ duration: 0.5 }}
               >
                 <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-8 transition-colors duration-300 ${
-                  isDark ? 'text-gray-300' : 'text-gray-700'
+                  isDark ? 'text-black-300' : 'text-black-700'
                 }`}>
                   {skillCategories[currentSkillIndex]?.title || 'Skills'}
                 </h3>
@@ -483,122 +285,71 @@ export default function About() {
               Projects
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {/* Project Card 1 */}
-              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                isDark 
-                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
-                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
-              }`}>
-                <div className="mb-4">
-                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>Portfolio Website</h3>
-                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
-                  }`}>
-                    A modern, responsive portfolio website built with Next.js and Tailwind CSS featuring smooth animations and glassmorphism design.
-                  </p>
+              {/* Project Cards - keeping the existing project cards code */}
+              {[
+                {
+                  title: "Portfolio Website",
+                  description: "A modern, responsive portfolio website built with Next.js and Tailwind CSS featuring smooth animations and glassmorphism design.",
+                  tags: [
+                    { name: "Next.js", color: "blue" },
+                    { name: "Tailwind CSS", color: "green" },
+                    { name: "Framer Motion", color: "purple" }
+                  ]
+                },
+                {
+                  title: "E-Commerce App",
+                  description: "A full-stack e-commerce application with user authentication, shopping cart, and payment integration using modern technologies.",
+                  tags: [
+                    { name: "React", color: "blue" },
+                    { name: "Node.js", color: "yellow" },
+                    { name: "MongoDB", color: "green" }
+                  ]
+                },
+                {
+                  title: "Task Management",
+                  description: "A collaborative task management tool with real-time updates, drag-and-drop functionality, and team collaboration features.",
+                  tags: [
+                    { name: "TypeScript", color: "blue" },
+                    { name: "React", color: "red" },
+                    { name: "Socket.io", color: "purple" }
+                  ]
+                }
+              ].map((project, index) => (
+                <div key={index} className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                  isDark 
+                    ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                    : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+                }`}>
+                  <div className="mb-4">
+                    <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                      isDark ? 'text-white' : 'text-black'
+                    }`}>{project.title}</h3>
+                    <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                      isDark ? 'text-gray-300' : 'text-secondary-foreground'
+                    }`}>
+                      {project.description}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag) => (
+                      <span key={tag.name} className={`px-2 py-1 bg-${tag.color}-500/20 text-${tag.color}-300 rounded text-xs border border-${tag.color}-400/30`}>
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-3">
+                    {['Live Demo', 'GitHub'].map((buttonText) => (
+                      <button key={buttonText} className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
+                        isDark 
+                          ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
+                          : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
+                      }`}>
+                        {buttonText}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs border border-blue-400/30">Next.js</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs border border-green-400/30">Tailwind CSS</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs border border-purple-400/30">Framer Motion</span>
-                </div>
-                <div className="flex gap-3">
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    Live Demo
-                  </button>
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    GitHub
-                  </button>
-                </div>
-              </div>
-
-              {/* Project Card 2 */}
-              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                isDark 
-                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
-                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
-              }`}>
-                <div className="mb-4">
-                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>E-Commerce App</h3>
-                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
-                  }`}>
-                    A full-stack e-commerce application with user authentication, shopping cart, and payment integration using modern technologies.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs border border-blue-400/30">React</span>
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded text-xs border border-yellow-400/30">Node.js</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs border border-green-400/30">MongoDB</span>
-                </div>
-                <div className="flex gap-3">
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    Live Demo
-                  </button>
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    GitHub
-                  </button>
-                </div>
-              </div>
-
-              {/* Project Card 3 */}
-              <div className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                isDark 
-                  ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
-                  : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
-              }`}>
-                <div className="mb-4">
-                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>Task Management</h3>
-                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    isDark ? 'text-gray-300' : 'text-secondary-foreground'
-                  }`}>
-                    A collaborative task management tool with real-time updates, drag-and-drop functionality, and team collaboration features.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs border border-blue-400/30">TypeScript</span>
-                  <span className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-xs border border-red-400/30">React</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs border border-purple-400/30">Socket.io</span>
-                </div>
-                <div className="flex gap-3">
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    Live Demo
-                  </button>
-                  <button className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                    isDark 
-                      ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                      : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                  }`}>
-                    GitHub
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </motion.div>
         </div>
