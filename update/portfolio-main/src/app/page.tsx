@@ -171,7 +171,7 @@ export default function Home() {
         animate="visible"
       >
         <span className="relative z-10 flex items-center gap-0">
-          Know more
+          Let's start
           <svg 
             className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
             fill="none" 
