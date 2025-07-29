@@ -2,22 +2,22 @@
 
 import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 const githubButtonVariants = cva(
-  'cursor-pointer relative overflow-hidden will-change-transform backface-visibility-hidden transform-gpu transition-all duration-300 ease-out hover:scale-105 group whitespace-nowrap focus-visible:outline-hidden inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background disabled:pointer-events-none disabled:opacity-60 [&_svg]:shrink-0',
+  'cursor-pointer inline-flex items-center justify-center font-medium transition-all duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2',
   {
     variants: {
       variant: {
         default:
-          'bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-white/20 hover:border-white/40 text-black shadow-lg hover:shadow-xl',
+          'bg-white/30 backdrop-blur-lg hover:bg-white/50 border border-black/30 hover:border-black/40 text-black shadow-lg hover:shadow-xl',
         outline:
           'bg-background text-accent-foreground border border-input hover:bg-accent',
       },
       size: {
-        default: 'h-8.5 rounded-md px-3 gap-2 text-[0.8125rem] leading-none [&_svg]:size-4',
-        sm: 'h-7 rounded-md px-2.5 gap-1.5 text-xs leading-none [&_svg]:size-3.5',
-        custom: 'px-4 py-2 rounded-lg text-sm leading-none [&_svg]:size-4',
+        default: 'h-8.5 rounded-md px-3 gap-2 text-[0.8125rem] [&_svg]:size-4',
+        sm: 'h-7 rounded-md px-2.5 gap-1.5 text-xs [&_svg]:size-3.5',
+        custom: 'px-4 py-2 rounded-lg text-sm [&_svg]:size-4',
       },
     },
     defaultVariants: {
@@ -33,7 +33,7 @@ interface GithubButtonProps
   repoUrl: string;
 }
 
-function GithubButton({
+const GithubButton = memo(function GithubButton({
   className,
   variant = 'default',
   size = 'custom',
@@ -41,47 +41,18 @@ function GithubButton({
   onClick,
   ...props
 }: GithubButtonProps) {
-  const navigateToRepo = () => {
-    if (!repoUrl) return;
-    try {
-      const link = document.createElement('a');
-      link.href = repoUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch {
-      try {
-        window.open(repoUrl, '_blank', 'noopener,noreferrer');
-      } catch {
-        window.location.href = repoUrl;
-      }
-    }
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
       onClick(event);
       return;
     }
-    navigateToRepo();
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      navigateToRepo();
-    }
-  };
+    window.open(repoUrl, '_blank', 'noopener,noreferrer');
+  }, [onClick, repoUrl]);
 
   return (
     <button
       className={cn(githubButtonVariants({ variant, size, className }))}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex={0}
       aria-label="Visit GitHub repository"
       {...props}
     >
@@ -90,7 +61,7 @@ function GithubButton({
       </svg>
     </button>
   );
-}
+});
 
 export { GithubButton, githubButtonVariants };
 export type { GithubButtonProps };

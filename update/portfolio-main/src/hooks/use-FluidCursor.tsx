@@ -1,9 +1,61 @@
 // @ts-nocheck
 const fluidCursor = () => {
+  // Check if we're on the homepage - only run fluid effect there
+  const currentPath = window.location.pathname;
+  const isHomepage = currentPath === '/' || currentPath === '/index.html' || currentPath === '';
+
+  if (!isHomepage) {
+    console.log('FluidCursor disabled - not on homepage');
+    return;
+  }
+
+  let isInitialized = false;
+  if (isInitialized) {
+    console.warn('FluidCursor already initialized');
+    return;
+  }
+  isInitialized = true;
+
   const canvas = document.getElementById('fluid');
   if (!canvas) {
     console.warn('FluidCursor canvas not found');
     return;
+  }
+
+  let animationId = null;
+  let isContextLost = false;
+  let gl = null; // Declare gl in outer scope
+
+  // Add context loss/restore event listeners
+  canvas.addEventListener('webglcontextlost', handleContextLost, false);
+  canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+
+  function handleContextLost(event) {
+    event.preventDefault();
+    isContextLost = true;
+    console.warn('WebGL context lost');
+    
+    // Cancel animation frame
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  function handleContextRestored() {
+    console.log('WebGL context restored');
+    isContextLost = false;
+    
+    try {
+      // Reinitialize the fluid cursor
+      setTimeout(() => {
+        if (!isContextLost) {
+          fluidCursor();
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Failed to restore WebGL context:', error);
+    }
   }
 
   function resizeCanvas() {
@@ -58,7 +110,8 @@ const fluidCursor = () => {
     const pointers = [];
     pointers.push(new pointerPrototype());
 
-    const { gl, ext } = getWebGLContext(canvas);
+    const { gl: webglContext, ext } = getWebGLContext(canvas);
+    gl = webglContext; // Assign to outer scope variable
 
     if (!ext.supportLinearFiltering) {
       config.DYE_RESOLUTION = 256;
@@ -868,47 +921,7 @@ const fluidCursor = () => {
       return target;
     }
 
-    function createTextureAsync(url) {
-      let texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGB,
-        1,
-        1,
-        0,
-        gl.RGB,
-        gl.UNSIGNED_BYTE,
-        new Uint8Array([255, 255, 255])
-      );
-
-      let obj = {
-        texture,
-        width: 1,
-        height: 1,
-        attach(id) {
-          gl.activeTexture(gl.TEXTURE0 + id);
-          gl.bindTexture(gl.TEXTURE_2D, texture);
-          return id;
-        },
-      };
-
-      let image = new Image();
-      image.onload = () => {
-        obj.width = image.width;
-        obj.height = image.height;
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-      };
-      image.src = url;
-
-      return obj;
-    }
+    // Remove unused createTextureAsync function
 
     function updateKeywords() {
       let displayKeywords = [];
@@ -923,14 +936,26 @@ const fluidCursor = () => {
     let colorUpdateTimer = 0.0;
 
     function update() {
-      const dt = calcDeltaTime();
-      // console.log(dt)
-      if (resizeCanvas()) initFramebuffers();
-      updateColors(dt);
-      applyInputs();
-      step(dt);
-      render(null);
-      requestAnimationFrame(update);
+      if (isContextLost) {
+        return;
+      }
+
+      try {
+        const dt = calcDeltaTime();
+        if (resizeCanvas()) initFramebuffers();
+        updateColors(dt);
+        applyInputs();
+        step(dt);
+        render(null);
+        animationId = requestAnimationFrame(update);
+      } catch (error) {
+        console.error('Error in animation loop:', error);
+        // Stop the animation loop on error
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+      }
     }
 
     function calcDeltaTime() {
@@ -1345,6 +1370,29 @@ const fluidCursor = () => {
       }
       return hash;
     }
+
+    // Add cleanup function after gl is defined
+    window.fluidCursorCleanup = () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+      
+      // Clear WebGL resources
+      if (gl) {
+        const loseContextExt = gl.getExtension('WEBGL_lose_context');
+        if (loseContextExt) {
+          loseContextExt.loseContext();
+        }
+      }
+    };
+
+    // Start the animation
+    update();
+
   } catch (error) {
     console.error('FluidCursor initialization failed:', error);
     return;

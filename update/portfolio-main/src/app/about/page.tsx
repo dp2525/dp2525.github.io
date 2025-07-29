@@ -2,17 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from 'next-themes';
 import dynamic from 'next/dynamic';
 import AboutSections from '@/components/AboutSections';
 
 // Dynamically import components that might cause issues
-const FluidCursor = dynamic(() => import('@/components/FluidCursor'), { 
-  ssr: false,
-  loading: () => null 
-});
-
 const GithubButton = dynamic(() => import('@/components/ui/github-button').then(mod => ({ default: mod.GithubButton })), { 
   ssr: false,
   loading: () => <div className="w-10 h-10 bg-white/20 rounded-lg animate-pulse" />
@@ -23,6 +18,11 @@ export default function About() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+
+  // Simplified handlers
+  const handleThemeToggle = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -104,7 +104,9 @@ export default function About() {
           isDark 
             ? 'from-gray-400/20 to-gray-400/0' 
             : 'from-neutral-500/20 to-neutral-500/0'
-        } bg-clip-text text-[3rem] sm:text-[6rem] md:text-[8rem] lg:text-[12rem] leading-none font-black text-transparent select-none transition-colors duration-300`}>
+        } bg-clip-text text-[4rem] leading-none font-black text-transparent select-none xs:text-[5rem] sm:text-[8rem] md:text-[10rem] lg:text-[16rem] transition-colors duration-300`}
+        style={{ marginBottom: '-1rem' }}
+        >
           Dhvani
         </div>
       </div>
@@ -114,68 +116,43 @@ export default function About() {
         <GithubButton
           size="custom"
           repoUrl="https://github.com/dp2525/dp2525.github.io"
-          className={`bg-white/20 backdrop-blur-lg border transition-all duration-300 ${
-            isDark ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-          }`}
+          className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
+          title="GitHub"
         />
 
-        {/* Container for all buttons */}
         <div className="flex flex-row sm:flex-col gap-3">
           {/* Dark mode toggle */}
-          <motion.button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
-              isDark 
-                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
-                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-            }`}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          <button
+            onClick={handleThemeToggle}
+            className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             {isDark ? (
-              <motion.svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" initial={{ rotate: 0 }} animate={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
-              </motion.svg>
+              </svg>
             ) : (
-              <motion.svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" initial={{ rotate: 0 }} animate={{ rotate: -360 }} transition={{ duration: 0.5 }}>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </motion.svg>
+              </svg>
             )}
-          </motion.button>
+          </button>
 
           {/* LinkedIn button */}
-          <motion.button
+          <button
             onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
-            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
-              isDark 
-                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
-                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-            }`}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="LinkedIn"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
             </svg>
-          </motion.button>
+          </button>
 
           {/* Home button */}
-          <motion.button
+          <button
             onClick={() => router.push('/')}
-            className={`px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg ${
-              isDark 
-                ? 'border-white/30 hover:border-white/50 text-white hover:bg-white/30' 
-                : 'border-black/30 hover:border-black/50 text-black hover:bg-white/30'
-            }`}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="Home"
           >
             <img 
@@ -189,7 +166,7 @@ export default function About() {
                 }
               }}
             />
-          </motion.button>
+          </button>
         </div>
       </div>
 
@@ -252,16 +229,18 @@ export default function About() {
                   ))}
                 </div>
 
-                {/* Navigation dots */}
+                {/* Navigation dots - Simplified */}
                 <div className="flex justify-center mt-8 space-x-2">
                   {skillCategories.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentSkillIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                         index === currentSkillIndex 
-                          ? 'bg-blue-500 scale-125' 
-                          : isDark ? 'bg-white/30 hover:bg-white/50' : 'bg-black/30 hover:bg-black/50'
+                          ? 'bg-blue-500 scale-125 focus:ring-blue-500' 
+                          : isDark 
+                            ? 'bg-white/30 hover:bg-white/50 focus:ring-white/50' 
+                            : 'bg-black/30 hover:bg-black/50 focus:ring-black/50'
                       }`}
                     />
                   ))}
@@ -354,9 +333,6 @@ export default function About() {
           </motion.div>
         </div>
       </div>
-
-      {/* FluidCursor - only render once at the end */}
-      {mounted && <FluidCursor />}
     </div>
   );
 }

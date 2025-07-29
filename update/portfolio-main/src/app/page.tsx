@@ -5,11 +5,71 @@ import { GithubButton } from '@/components/ui/github-button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 
 const texts = ['Web Developer', 'Frontend Developer'];
+
+// Define props interface for ThemeToggle
+interface ThemeToggleProps {
+  isDark: boolean;
+  handleThemeToggle: () => void;
+  isThemeToggling: boolean;
+}
+
+// Memoized components for better performance
+const ThemeToggle = memo(({ isDark, handleThemeToggle, isThemeToggling }: ThemeToggleProps) => {
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isThemeToggling) {
+      e.currentTarget.style.transform = 'scale(1.05)';
+    }
+  }, [isThemeToggling]);
+
+  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'scale(1)';
+  }, []);
+
+  return (
+    <button
+      onClick={handleThemeToggle}
+      disabled={isThemeToggling}
+      className={`px-4 py-2 backdrop-blur-lg border font-medium rounded-lg transition-all duration-150 shadow-lg flex items-center justify-center ${
+        isDark 
+          ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' 
+          : 'bg-white/30 hover:bg-white/50 border-black text-black'
+      } ${isThemeToggling ? 'opacity-50 cursor-not-allowed' : ''}`}
+      style={{ 
+        willChange: 'transform',
+        transform: 'scale(1)',
+        backfaceVisibility: 'hidden'
+      }}
+      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {isDark ? (
+        <svg 
+          className="w-4 h-4" 
+          fill="currentColor" 
+          viewBox="0 0 20 20"
+        >
+          <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
+        </svg>
+      ) : (
+        <svg 
+          className="w-4 h-4" 
+          fill="currentColor" 
+          viewBox="0 0 20 20"
+        >
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+      )}
+    </button>
+  );
+});
+
+ThemeToggle.displayName = 'ThemeToggle';
 
 /* ---------- component ---------- */
 export default function Home() {
@@ -20,6 +80,32 @@ export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isThemeToggling, setIsThemeToggling] = useState(false);
+
+  // Move all hooks before any conditional logic
+  // Debounced theme toggle to prevent rapid clicks
+  const handleThemeToggle = useCallback(() => {
+    if (isThemeToggling) return;
+    setIsThemeToggling(true);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTimeout(() => setIsThemeToggling(false), 300);
+  }, [theme, setTheme, isThemeToggling]);
+
+  // Optimized navigation handler
+  const handleNavigateToAbout = useCallback(() => {
+    router.push('/about');
+  }, [router]);
+
+  // Memoize typing display to reduce re-renders
+  const typingDisplay = useMemo(() => (
+    <>
+      {typedText}
+      <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`}>|</span>
+    </>
+  ), [typedText, showCursor]);
+
+  // Memoize expensive calculations - moved here with other hooks
+  const isDark = useMemo(() => resolvedTheme === 'dark', [resolvedTheme]);
 
   useEffect(() => {
     setMounted(true);
@@ -89,31 +175,13 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    // Preload assets in background
-    const img = new window.Image();
-    img.src = '/pic.png';
-
-    // Remove the unsupported preload links - just preload the images directly
-    const preloadVideo = () => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      video.src = '/final_memojis.webm';
-      video.load();
-    };
-    
-    preloadVideo();
-  }, []);
-
-  // Prevent hydration mismatch
+  // Prevent hydration mismatch - now after all hooks
   if (!mounted) {
     return null;
   }
 
-  const isDark = resolvedTheme === 'dark';
-
   return (
-    <div className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20 transition-colors duration-300 ${
+    <div className={`relative flex h-screen flex-col items-center justify-center overflow-hidden px-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
       {/* big blurred footer word - Fixed for mobile */}
@@ -140,50 +208,16 @@ export default function Home() {
           }`}
         />
 
-        {/* Dark mode toggle */}
-        <motion.button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className={`px-4 py-2 backdrop-blur-lg border font-medium rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center ${
-            isDark 
-              ? 'bg-gray-800/30 hover:bg-gray-700/50 border-white text-white' 
-              : 'bg-white/30 hover:bg-white/50 border-black text-black'
-          }`}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {isDark ? (
-            <motion.svg 
-              className="w-4 h-4" 
-              fill="currentColor" 
-              viewBox="0 0 20 20"
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <path d="M10 2a6 6 0 015.996 5.85L16 8a6 6 0 01-4 5.659V16a1 1 0 01-1 1H9a1 1 0 01-1-1v-2.341A6 6 0 0110 2zM9 18a1 1 0 001 1h0a1 1 0 001-1v-1H9v1z"/>
-            </motion.svg>
-          ) : (
-            <motion.svg 
-              className="w-4 h-4" 
-              fill="currentColor" 
-              viewBox="0 0 20 20"
-              initial={{ rotate: 0 }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-            </motion.svg>
-          )}
-        </motion.button>
+        <ThemeToggle 
+          isDark={isDark} 
+          handleThemeToggle={handleThemeToggle} 
+          isThemeToggling={isThemeToggling} 
+        />
       </div>
 
       {/* header */}
       <motion.div
-        className="z-1 mt-24 mb-8 flex flex-col items-center text-center md:mt-4 md:mb-12"
+        className="z-1 mb-6 flex flex-col items-center text-center md:mb-8"
         variants={topElementVariants}
         initial="hidden"
         animate="visible"
@@ -205,14 +239,13 @@ export default function Home() {
         <h3 className={`mt-2 text-xl font-medium md:text-2xl transition-colors duration-300 ${
           isDark ? 'text-gray-300' : 'text-secondary-foreground'
         }`}>
-          {typedText}
-          <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`}>|</span>
+          {typingDisplay}
         </h3>
       </motion.div>
 
       {/* centre memoji */}
       <motion.div 
-        className="relative z-10 h-64 w-56 overflow-hidden sm:h-120 sm:w-120"
+        className="relative z-10 h-64 w-56 overflow-hidden sm:h-80 sm:w-72 md:h-96 md:w-80 lg:h-[24em] lg:w-96"
         variants={bottomElementVariants}
         initial="hidden"
         animate="visible"
@@ -227,31 +260,34 @@ export default function Home() {
         />
       </motion.div>
 
-      {/* button */}
-      <motion.button 
-        onClick={() => router.push('/about')}
-        className={`group relative z-20 mt-2 px-8 py-4 backdrop-blur-lg border font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105 active:scale-95 ${
+      {/* button - Optimized for INP */}
+      <button 
+        onClick={handleNavigateToAbout}
+        className={`group relative z-20 mt-4 px-8 py-4 backdrop-blur-lg border font-semibold rounded-full transition-all duration-150 shadow-lg hover:shadow-2xl ${
           isDark 
             ? 'bg-gray-800/40 hover:bg-gray-800/50 border-white text-white' 
             : 'bg-white/40 hover:bg-white/50 border-black text-black'
         }`}
-        variants={bottomElementVariants}
-        initial="hidden"
-        animate="visible"
+        style={{ 
+          willChange: 'transform, box-shadow',
+          transform: 'scale(1)',
+          backfaceVisibility: 'hidden'
+        }}
       >
         <span className="relative z-10 flex items-center gap-0">
           Let's start
           <svg 
-            className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+            className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
+            style={{ willChange: 'transform' }}
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </span>
-        <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      </motion.button>
+        <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
+      </button>
 
       {/* Render FluidCursor conditionally based on mounted state and window width */}
       {mounted && typeof window !== 'undefined' && window.innerWidth >= 1024 && <FluidCursor />}
