@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React, { memo, useCallback } from 'react';
 
 const githubButtonVariants = cva(
-  'cursor-pointer inline-flex items-center justify-center font-medium transition-all duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2',
+  'cursor-pointer inline-flex items-center justify-center font-medium transition-all duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-0 focus:ring-offset-0',
   {
     variants: {
       variant: {
