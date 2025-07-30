@@ -229,7 +229,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
             <div className="order-1 lg:order-2 relative h-[400px] lg:h-[500px] rounded-xl transition-all duration-300 flex items-center justify-center overflow-hidden">
               {/* Your about.png image */}
               <img 
-                src="/about.png" 
+                src="/a.webp" 
                 alt="About Dhvani Patel" 
                 className="w-full h-full object-contain rounded-xl relative z-10"
               />

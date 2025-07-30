@@ -82,6 +82,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isThemeToggling, setIsThemeToggling] = useState(false);
 
+
   // Move all hooks before any conditional logic
   // Debounced theme toggle to prevent rapid clicks
   const handleThemeToggle = useCallback(() => {
@@ -91,10 +92,22 @@ export default function Home() {
     setTimeout(() => setIsThemeToggling(false), 300);
   }, [theme, setTheme, isThemeToggling]);
 
-  // Optimized navigation handler
-  const handleNavigateToAbout = useCallback(() => {
-    router.push('/about');
+  // Optimized navigation handler for better INP
+  const handleNavigateToAbout = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
+    // Use requestAnimationFrame for instant navigation after pointer event
+    window.requestAnimationFrame(() => {
+      router.push('/about');
+    });
   }, [router]);
+
+  const handleDownloadResume = useCallback(() => {
+    const link = document.createElement('a');
+    link.href = '/resume.pdf';
+    link.download = 'Dhvani-Patel-Resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
 
   // Memoize typing display to reduce re-renders
   const typingDisplay = useMemo(() => (
@@ -184,6 +197,20 @@ export default function Home() {
     <div className={`relative flex h-screen flex-col items-center justify-center overflow-hidden px-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
+      {/* Looking for talent button - responsive, only symbol on small screens */}
+      <button
+        className="fixed top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-1 px-2 py-1 rounded-md shadow-md border backdrop-blur-lg transition-colors duration-300
+          bg-white/80 text-black border-black
+          dark:bg-gray-800/80 dark:text-white dark:border-white font-semibold cursor-pointer
+          w-auto max-w-xs text-sm"
+        onClick={handleDownloadResume}
+        type="button"
+        title="Download Resume"
+      >
+        {/* Live blinking dot */}
+        <span className="inline-block w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
+        <span className="hidden sm:inline ml-1">Looking for a talent?</span>
+      </button>
       {/* big blurred footer word - Fixed for mobile */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
         <div
@@ -262,17 +289,14 @@ export default function Home() {
 
       {/* button - Optimized for INP */}
       <button 
-        onClick={handleNavigateToAbout}
+        onPointerUp={handleNavigateToAbout} // Use pointerup for lower input delay
         className={`group relative z-20 mt-4 px-8 py-4 backdrop-blur-lg border font-semibold rounded-full transition-all duration-150 shadow-lg hover:shadow-2xl ${
           isDark 
             ? 'bg-gray-800/40 hover:bg-gray-800/50 border-white text-white' 
             : 'bg-white/40 hover:bg-white/50 border-black text-black'
         }`}
-        style={{ 
-          willChange: 'transform, box-shadow',
-          transform: 'scale(1)',
-          backfaceVisibility: 'hidden'
-        }}
+       
+
       >
         <span className="relative z-10 flex items-center gap-0">
           Let's start
@@ -281,7 +305,10 @@ export default function Home() {
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
-            style={{ willChange: 'transform' }}
+            style={{ willChange: 'transform', pointerEvents: 'none' }} // Prevent SVG from capturing pointer events
+            tabIndex={-1} // Remove from tab order for faster pointer event propagation
+            aria-hidden="true"
+            focusable="false"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
