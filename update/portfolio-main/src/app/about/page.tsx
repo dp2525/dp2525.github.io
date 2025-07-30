@@ -67,7 +67,7 @@ export default function About() {
         { name: "Postman", icon: "📦", color: "text-blue-500" },
         { name: "Vite", icon: "⚡", color: "text-yellow-500" },
         { name: "Docker", icon: "🐳", color: "text-blue-500" },
-        { name: "Notepad++", icon: "🌐", color: "text-teal-500" }
+        { name: "Notpad++", icon: "🌐", color: "text-teal-500" }
       ]
     }
   ];
@@ -313,24 +313,11 @@ export default function About() {
                     alt="Project Thumbnail"
                     className="w-full h-40 object-cover rounded mb-4"
                   />
-                  <div className="mb-4">
-                    <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                      isDark ? 'text-white' : 'text-black'
-                    }`}>{project.title}</h3>
-                    <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                      isDark ? 'text-gray-300' : 'text-secondary-foreground'
-                    }`}>
-                      {project.description}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag) => (
-                      <span key={tag.name} className={`px-2 py-1 bg-${tag.color}-500/20 text-${tag.color}-300 rounded text-xs border border-${tag.color}-400/30`}>
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                  {/* Removed GitHub button */}
+                  {/* Project Title */}
+                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                    isDark ? 'text-white' : 'text-black'
+                  }`}>{project.title}</h3>
+                  {/* Only thumbnail and title shown */}
                 </div>
               ))}
             </div>
