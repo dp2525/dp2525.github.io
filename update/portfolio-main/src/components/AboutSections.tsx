@@ -78,10 +78,10 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
         }`}>
           <div className="border-l-4 border-green-400 pl-6 py-2">
             <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'}`}>
-              Full Stack Developer Intern
+              Full Stack Developer Intern (Co-op)
             </h3>
             <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              🏢 Tech Solutions Inc. | 📅 2024 - Present
+              🏢 Xccelerata | 📅 May 2024 - Aug 2024 | 📍
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Developing responsive web applications using React, Node.js, and MongoDB. Collaborated with team to improve user experience and optimize performance.
@@ -90,10 +90,10 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
 
           <div className={`border-l-4 pl-6 py-2 transition-colors duration-300 ${isDark ? 'border-blue-400' : 'border-blue-500'}`}>
             <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'}`}>
-              Frontend Developer
+              Intern
             </h3>
             <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Digital Agency | 2023 - 2024
+              Knoxpo | 📅 July 2019 - Jun 2020 | 📍 
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Created modern, responsive websites using React and Tailwind CSS. Worked on multiple client projects and improved site performance by 40%.
