@@ -81,7 +81,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
               Full Stack Developer Intern (Co-op)
             </h3>
             <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              🏢 Xccelerata | 📅 May 2024 - Aug 2024 | 📍
+              🏢 Xccelerata | 📅 May 2024 - Aug 2024
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Developing responsive web applications using React, Node.js, and MongoDB. Collaborated with team to improve user experience and optimize performance.
@@ -93,7 +93,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
               Intern
             </h3>
             <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Knoxpo | 📅 July 2019 - Jun 2020 | 📍 
+              Knoxpo | 📅 July 2019 - Jun 2020 |
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Created modern, responsive websites using React and Tailwind CSS. Worked on multiple client projects and improved site performance by 40%.
