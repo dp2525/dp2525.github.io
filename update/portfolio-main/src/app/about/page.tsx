@@ -64,10 +64,10 @@ export default function About() {
         { name: "GitHub", icon: "🐙", color: "text-gray-500" },
         { name: "VS Code", icon: "💻", color: "text-blue-500" },
         { name: "Figma", icon: "🎨", color: "text-purple-500" },
-        { name: "Webpack", icon: "📦", color: "text-blue-500" },
+        { name: "Postman", icon: "📦", color: "text-blue-500" },
         { name: "Vite", icon: "⚡", color: "text-yellow-500" },
         { name: "Docker", icon: "🐳", color: "text-blue-500" },
-        { name: "Netlify", icon: "🌐", color: "text-teal-500" }
+        { name: "Notepad++", icon: "🌐", color: "text-teal-500" }
       ]
     }
   ];
@@ -273,7 +273,8 @@ export default function About() {
                     { name: "Next.js", color: "blue" },
                     { name: "Tailwind CSS", color: "green" },
                     { name: "Framer Motion", color: "purple" }
-                  ]
+                  ],
+                  repoUrl: "https://github.com/dp2525/dp2525.github.io"
                 },
                 {
                   title: "E-Commerce App",
@@ -282,7 +283,8 @@ export default function About() {
                     { name: "React", color: "blue" },
                     { name: "Node.js", color: "yellow" },
                     { name: "MongoDB", color: "green" }
-                  ]
+                  ],
+                  repoUrl: "https://github.com/dp2525/ecommerce-app"
                 },
                 {
                   title: "Task Management",
@@ -291,14 +293,26 @@ export default function About() {
                     { name: "TypeScript", color: "blue" },
                     { name: "React", color: "red" },
                     { name: "Socket.io", color: "purple" }
-                  ]
+                  ],
+                  repoUrl: "https://github.com/dp2525/task-management"
                 }
               ].map((project, index) => (
-                <div key={index} className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                  isDark 
-                    ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
-                    : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
-                }`}>
+                <div
+                  key={index}
+                  className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    isDark 
+                      ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                      : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+                  }`}
+                  onClick={() => window.open(project.repoUrl, '_blank')}
+                  title="View on GitHub"
+                >
+                  {/* Thumbnail */}
+                  <img
+                    src="/p1.webp"
+                    alt="Project Thumbnail"
+                    className="w-full h-40 object-cover rounded mb-4"
+                  />
                   <div className="mb-4">
                     <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
                       isDark ? 'text-white' : 'text-black'
@@ -316,17 +330,7 @@ export default function About() {
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-3">
-                    {['Live Demo', 'GitHub'].map((buttonText) => (
-                      <button key={buttonText} className={`flex-1 px-3 py-2 border-2 rounded text-sm transition-all duration-200 ${
-                        isDark 
-                          ? 'bg-gray-800/20 hover:bg-gray-700/30 border-white/30 hover:border-white/50 text-white' 
-                          : 'bg-white/20 hover:bg-white/30 border-black/30 hover:border-black/50 text-black'
-                      }`}>
-                        {buttonText}
-                      </button>
-                    ))}
-                  </div>
+                  {/* Removed GitHub button */}
                 </div>
               ))}
             </div>
