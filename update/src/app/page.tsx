@@ -81,7 +81,7 @@ export default function Home() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isThemeToggling, setIsThemeToggling] = useState(false);
-
+  const [showFluidNotice, setShowFluidNotice] = useState(false);
 
   // Move all hooks before any conditional logic
   // Debounced theme toggle to prevent rapid clicks
@@ -122,6 +122,9 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setShowFluidNotice(true);
+    }
   }, []);
 
   /*  animations */
@@ -197,6 +200,12 @@ export default function Home() {
     <div className={`relative flex h-screen flex-col items-center justify-center overflow-hidden px-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
+      {/* Fluid effect notification for mobile/tablet */}
+      {showFluidNotice && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded shadow z-40 text-sm pointer-events-none">
+          ⚠️ Fluid effect is disable 
+        </div>
+      )}
       {/* Looking for talent button - responsive, only symbol on small screens */}
       <button
         className="fixed top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-1 px-2 py-1 rounded-md shadow-md border backdrop-blur-lg transition-colors duration-300
