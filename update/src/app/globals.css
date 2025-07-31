@@ -118,16 +118,59 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Optimize for better performance */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+  }
+}
+
+@layer components {
+  .btn-glass {
+    @apply px-4 py-2 bg-white/20 backdrop-blur-lg border font-medium rounded-lg transition-all duration-200 ease-out shadow-lg;
+    @apply hover:scale-105 active:scale-95 focus:outline-none focus:ring-0 focus:ring-offset-0;
+  }
+  
+  .btn-glass-dark {
+    @apply border-white/30 hover:border-white/50 text-white hover:bg-white/30 focus:ring-0;
+  }
+  
+  .btn-glass-light {
+    @apply border-black/30 hover:border-black/50 text-black hover:bg-white/30 focus:ring-0;
+  }
+  
+  .btn-nav {
+    @apply px-6 py-3 bg-white/20 backdrop-blur-lg border-2 font-medium shadow-lg transition-all duration-200 ease-out rounded-lg;
+    @apply hover:scale-105 active:scale-95 focus:outline-none focus:ring-0 focus:ring-offset-0;
+  }
+  
+  .btn-nav-dark {
+    @apply border-white/30 hover:border-white/50 text-white hover:bg-white/30 focus:ring-0;
+  }
+  
+  .btn-nav-light {
+    @apply border-black/30 hover:border-black/50 text-black hover:bg-white/30 focus:ring-0;
+  }
+  
+  .btn-main {
+    @apply px-8 py-4 backdrop-blur-lg border font-semibold rounded-full transition-all duration-200 ease-out shadow-lg hover:shadow-2xl;
+    @apply hover:scale-105 active:scale-95 focus:outline-none focus:ring-0 focus:ring-offset-0;
+  }
+  
+  .btn-main-dark {
+    @apply bg-gray-800/40 hover:bg-gray-800/50 border-white text-white focus:ring-0;
+  }
+  
+  .btn-main-light {
+    @apply bg-white/40 hover:bg-white/50 border-black text-black focus:ring-0;
   }
 }
 
 .custom-scrollbar {
-  /* For Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
 }
 
-/* For Chrome, Edge, and Safari */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -143,14 +186,14 @@
   border: transparent;
 }
 
-/* Hide scrollbar when not in use but keep functionality */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(155, 155, 155, 0.7);
 }
 
-/* Ensure code blocks can scroll horizontally */
+/* Optimize pre for better performance */
 pre {
   white-space: pre;
   word-wrap: normal;
   overflow-x: auto;
+  contain: layout style;
 }
