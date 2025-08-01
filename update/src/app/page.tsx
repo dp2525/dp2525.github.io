@@ -202,6 +202,20 @@ export default function Home() {
     <div className={`relative flex h-screen flex-col items-center justify-center overflow-hidden px-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
+      {/* Background words - styled same as about page */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 flex justify-center overflow-hidden z-0 select-none">
+        <div className={`bg-gradient-to-b ${
+          isDark
+            ? 'from-gray-400/20 to-gray-400/0'
+            : 'from-neutral-500/20 to-neutral-500/0'
+        } bg-clip-text text-[4rem] leading-none font-black text-transparent xs:text-[5rem] sm:text-[8rem] md:text-[10rem] lg:text-[16rem] transition-colors duration-300`}
+        style={{ marginBottom: '-1rem' }}
+        aria-hidden="true"
+        >
+          Dhvani
+        </div>
+      </div>
+
       {/* Simple Fluid effect notification*/}
       {showFluidNotice && (
         <div className="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-40">
@@ -274,7 +288,7 @@ export default function Home() {
         </h3>
       </motion.div>
 
-      {/* centre memoji */}
+      {/* centre memoji - Optimized as LCP element */}
       <motion.div 
         className="relative z-10 h-64 w-56 overflow-hidden sm:h-80 sm:w-72 md:h-96 md:w-80 lg:h-[24em] lg:w-96"
         variants={bottomElementVariants}
@@ -284,10 +298,15 @@ export default function Home() {
         <Image
           src="/pic.webp"
           alt="girl memoji"
-          width={2000}
-          height={2000}
+          width={384}  // Use actual display size
+          height={384}
           priority
           className="object-cover w-full h-full"
+          sizes="(max-width: 640px) 224px, (max-width: 768px) 288px, (max-width: 1024px) 384px, 384px"
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+          }}
         />
       </motion.div>
 
