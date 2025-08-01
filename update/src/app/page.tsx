@@ -124,6 +124,8 @@ export default function Home() {
     setMounted(true);
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
       setShowFluidNotice(true);
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => setShowFluidNotice(false), 3000);
     }
   }, []);
 
@@ -200,13 +202,20 @@ export default function Home() {
     <div className={`relative flex h-screen flex-col items-center justify-center overflow-hidden px-4 transition-colors duration-300 ${
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
-      {/* Fluid effect notification for mobile/tablet */}
+      {/* Simple Fluid effect notification*/}
       {showFluidNotice && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded shadow z-40 text-sm pointer-events-none">
-          ⚠️ Fluid effect is disable 
+        <div className="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-40">
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full shadow-lg text-xs font-medium backdrop-blur-md border ${
+            isDark 
+              ? 'bg-amber-900/80 text-amber-100 border-amber-700/50' 
+              : 'bg-amber-100/90 text-amber-800 border-amber-300/60'
+          }`}>
+            <span>Fluid effect disabled</span>
+          </div>
         </div>
       )}
-      {/* Looking for talent button - responsive, only symbol on small screens */}
+
+      {/* Looking for talent button */}
       <button
         className="fixed top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-1 px-2 py-1 rounded-md shadow-md border backdrop-blur-lg transition-colors duration-300
           bg-white/80 text-black border-black
@@ -216,23 +225,9 @@ export default function Home() {
         type="button"
         title="Download Resume"
       >
-        {/* Live blinking dot */}
         <span className="inline-block w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
         <span className="hidden sm:inline ml-1">Looking for a talent?</span>
       </button>
-      {/* big blurred footer word - Fixed for mobile */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
-        <div
-          className={`bg-gradient-to-b ${
-            isDark 
-              ? 'from-gray-400/20 to-gray-400/0' 
-              : 'from-neutral-500/20 to-neutral-500/0'
-          } bg-clip-text text-[4rem] leading-none font-black text-transparent select-none xs:text-[5rem] sm:text-[8rem] md:text-[10rem] lg:text-[16rem] transition-colors duration-300`}
-          style={{ marginBottom: '-1rem' }}
-        >
-          Dhvani
-        </div>
-      </div>
 
       {/* Navigation buttons - Responsive layout */}
       <div className="absolute top-6 right-8 z-20 flex flex-row sm:flex-col gap-3">
