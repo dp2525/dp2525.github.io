@@ -287,7 +287,7 @@ export default function Home() {
         animate="visible"
       >
         <Image
-          src="/pic.png"
+          src="/pic.webp"
           alt="girl memoji"
           width={2000}
           height={2000}

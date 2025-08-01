@@ -21,8 +21,9 @@ export default function About() {
 
   // Simplified handlers
   const handleThemeToggle = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setTheme]);
+    const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+  }, [resolvedTheme, setTheme]);
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -123,7 +124,11 @@ export default function About() {
         <div className="flex flex-row sm:flex-col gap-3">
           {/* Dark mode toggle */}
           <button
-            onClick={handleThemeToggle}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleThemeToggle();
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
@@ -140,7 +145,11 @@ export default function About() {
 
           {/* LinkedIn button */}
           <button
-            onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.open('https://linkedin.com/in/dhvanipatel10/', '_blank');
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="LinkedIn"
           >
@@ -151,7 +160,11 @@ export default function About() {
 
           {/* Home button */}
           <button
-            onClick={() => router.push('/')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push('/');
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="Home"
           >
