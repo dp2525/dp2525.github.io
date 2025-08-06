@@ -21,8 +21,9 @@ export default function About() {
 
   // Simplified handlers
   const handleThemeToggle = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setTheme]);
+    const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+  }, [resolvedTheme, setTheme]);
 
   // Ensure component is mounted before rendering complex animations
   useEffect(() => {
@@ -123,7 +124,11 @@ export default function About() {
         <div className="flex flex-row sm:flex-col gap-3">
           {/* Dark mode toggle */}
           <button
-            onClick={handleThemeToggle}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleThemeToggle();
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
@@ -140,7 +145,11 @@ export default function About() {
 
           {/* LinkedIn button */}
           <button
-            onClick={() => window.open('https://linkedin.com/in/dhvanipatel10/', '_blank')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.open('https://linkedin.com/in/dhvanipatel10/', '_blank');
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="LinkedIn"
           >
@@ -151,7 +160,11 @@ export default function About() {
 
           {/* Home button */}
           <button
-            onClick={() => router.push('/')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push('/');
+            }}
             className={`btn-glass ${isDark ? 'btn-glass-dark' : 'btn-glass-light'}`}
             title="Home"
           >
@@ -265,61 +278,65 @@ export default function About() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {/* Project Cards - keeping the existing project cards code */}
-              {[
-                {
-                  title: "Portfolio Website",
-                  description: "A modern, responsive portfolio website built with Next.js and Tailwind CSS featuring smooth animations and glassmorphism design.",
-                  tags: [
-                    { name: "Next.js", color: "blue" },
-                    { name: "Tailwind CSS", color: "green" },
-                    { name: "Framer Motion", color: "purple" }
-                  ],
-                  repoUrl: "https://github.com/dp2525/dp2525.github.io"
-                },
-                {
-                  title: "E-Commerce App",
-                  description: "A full-stack e-commerce application with user authentication, shopping cart, and payment integration using modern technologies.",
-                  tags: [
-                    { name: "React", color: "blue" },
-                    { name: "Node.js", color: "yellow" },
-                    { name: "MongoDB", color: "green" }
-                  ],
-                  repoUrl: "https://github.com/dp2525/ecommerce-app"
-                },
-                {
-                  title: "Task Management",
-                  description: "A collaborative task management tool with real-time updates, drag-and-drop functionality, and team collaboration features.",
-                  tags: [
-                    { name: "TypeScript", color: "blue" },
-                    { name: "React", color: "red" },
-                    { name: "Socket.io", color: "purple" }
-                  ],
-                  repoUrl: "https://github.com/dp2525/task-management"
-                }
-              ].map((project, index) => (
-                <div
-                  key={index}
-                  className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                    isDark 
-                      ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
-                      : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
-                  }`}
-                  onClick={() => window.open(project.repoUrl, '_blank')}
-                  title="View on GitHub"
-                >
-                  {/* Thumbnail */}
-                  <img
-                    src="/p1.webp"
-                    alt="Project Thumbnail"
-                    className="w-full h-40 object-cover rounded mb-4"
-                  />
-                  {/* Project Title */}
-                  <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
-                    isDark ? 'text-white' : 'text-black'
-                  }`}>{project.title}</h3>
-                  {/* Only thumbnail and title shown */}
-                </div>
-              ))}
+              {
+                [
+                  {
+                    title: "Portfolio Website",
+                    description: "A modern, responsive portfolio website built with Next.js and Tailwind CSS featuring smooth animations and glassmorphism design.",
+                    tags: [
+                      { name: "Next.js", color: "blue" },
+                      { name: "Tailwind CSS", color: "green" },
+                      { name: "Framer Motion", color: "purple" }
+                    ],
+                    repoUrl: "https://github.com/dp2525/dp2525.github.io",
+                    thumbnail: "/p2.webp"
+                  },
+                  {
+                    title: "E-Commerce App",
+                    description: "A full-stack e-commerce application with user authentication, shopping cart, and payment integration using modern technologies.",
+                    tags: [
+                      { name: "React", color: "blue" },
+                      { name: "Node.js", color: "yellow" },
+                      { name: "MongoDB", color: "green" }
+                    ],
+                    repoUrl: "https://github.com/dp2525/ecommerce-app",
+                    thumbnail: "/p1.webp"
+                  },
+                  {
+                    title: "Task Management",
+                    description: "A collaborative task management tool with real-time updates, drag-and-drop functionality, and team collaboration features.",
+                    tags: [
+                      { name: "TypeScript", color: "blue" },
+                      { name: "React", color: "red" },
+                      { name: "Socket.io", color: "purple" }
+                    ],
+                    repoUrl: "https://github.com/dp2525/task-management",
+                    thumbnail: "/p1.webp"
+                  }
+                ].map((project, index) => (
+                  <div
+                    key={index}
+                    className={`backdrop-blur-lg border-2 rounded-lg p-6 transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                      isDark 
+                        ? 'bg-gray-800/10 border-white/30 hover:border-white/50 hover:bg-gray-700/20' 
+                        : 'bg-white/10 border-black/30 hover:border-black/50 hover:bg-white/20'
+                    }`}
+                    onClick={() => window.open(project.repoUrl, '_blank')}
+                    title="View on GitHub"
+                  >
+                    {/* Thumbnail */}
+                    <img
+                      src={project.thumbnail}
+                      alt="Project Thumbnail"
+                      className="w-full h-40 object-cover rounded mb-4"
+                    />
+                    {/* Project Title */}
+                    <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${
+                      isDark ? 'text-white' : 'text-black'
+                    }`}>{project.title}</h3>
+                    {/* Only thumbnail and title shown */}
+                  </div>
+                ))}
             </div>
           </motion.div>
         </div>

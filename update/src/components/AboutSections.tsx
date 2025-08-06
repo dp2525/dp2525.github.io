@@ -28,7 +28,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
       )
     },
     education: {
-      title: "Education 🎓",
+      title: "Education",
       content: (
         <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
           isDark ? 'text-gray-100' : 'text-secondary-foreground'
@@ -71,7 +71,7 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
       )
     },
     experience: {
-      title: "Experience 💼",
+      title: "Experience",
       content: (
         <div className={`text-lg md:text-xl leading-relaxed space-y-6 transition-colors duration-300 ${
           isDark ? 'text-gray-100' : 'text-secondary-foreground'
@@ -97,18 +97,6 @@ export default function AboutSections({ isDark }: AboutSectionsProps) {
             </p>
             <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
               Created modern, responsive websites using React and Tailwind CSS. Worked on multiple client projects and improved site performance by 40%.
-            </p>
-          </div>
-
-          <div className={`border-l-4 pl-6 py-2 transition-colors duration-300 ${isDark ? 'border-purple-400' : 'border-purple-500'}`}>
-            <h3 className={`text-xl font-semibold mb-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'}`}>
-              Web Development Freelancer
-            </h3>
-            <p className={`font-medium mb-2 transition-colors duration-300 ${isDark ? 'text-gray-200' : 'text-black-300'}`}>
-              Self-Employed | 2022 - 2023
-            </p>
-            <p className={`text-sm transition-colors duration-300 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-              Built custom websites for small businesses and startups. Managed full project lifecycle from design to deployment.
             </p>
           </div>
 
