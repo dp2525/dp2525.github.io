@@ -82,6 +82,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isThemeToggling, setIsThemeToggling] = useState(false);
   const [showFluidNotice, setShowFluidNotice] = useState(false);
+  const [welcomeShake, setWelcomeShake] = useState(false);
 
   // Move all hooks before any conditional logic
   // Debounced theme toggle to prevent rapid clicks
@@ -124,9 +125,22 @@ export default function Home() {
     setMounted(true);
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
       setShowFluidNotice(true);
-      // Auto-dismiss after 3 seconds
       setTimeout(() => setShowFluidNotice(false), 3000);
     }
+    // Shake the welcome button every 2.5 seconds
+    let shakeTimeout: NodeJS.Timeout;
+    const shakeInterval = setInterval(() => {
+      setWelcomeShake(true);
+      shakeTimeout = setTimeout(() => setWelcomeShake(false), 900); // match animation duration
+    }, 2500);
+    // Initial shake on mount
+    setWelcomeShake(true);
+    shakeTimeout = setTimeout(() => setWelcomeShake(false), 900);
+
+    return () => {
+      clearInterval(shakeInterval);
+      clearTimeout(shakeTimeout);
+    };
   }, []);
 
   /*  animations */
@@ -231,10 +245,7 @@ export default function Home() {
 
       {/* Looking for talent button */}
       <button
-        className="fixed top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-1 px-2 py-1 rounded-md shadow-md border backdrop-blur-lg transition-colors duration-300
-          bg-white/80 text-black border-black
-          dark:bg-gray-800/80 dark:text-white dark:border-white font-semibold cursor-pointer
-          w-auto max-w-xs text-sm"
+        className="fixed top-4 left-4 sm:top-6 sm:left-8 z-30 flex items-center gap-1 px-2 py-1 rounded-md shadow-md border backdrop-blur-lg transition-colors duration-300 bg-white/80 text-black border-black dark:bg-gray-800/80 dark:text-white dark:border-white font-semibold cursor-pointer w-auto max-w-xs text-sm"
         onClick={handleDownloadResume}
         type="button"
         title="Download Resume"
@@ -268,7 +279,7 @@ export default function Home() {
         animate="visible"
       >
         <div className="z-100">
-          <WelcomeModal />
+          <WelcomeModal triggerClassName={`${welcomeShake ? 'vibrate-once' : ''} vibrate-on-hover`} />
         </div>
 
         <h2 className={`mt-1 text-xl font-semibold md:text-2xl transition-colors duration-300 ${
@@ -341,6 +352,25 @@ export default function Home() {
 
       {/* Render FluidCursor conditionally based on mounted state and window width */}
       {mounted && typeof window !== 'undefined' && window.innerWidth >= 1024 && <FluidCursor />}
+
+      <style jsx global>{`
+        @keyframes vibrate {
+          0%, 100% { transform: translateX(0); }
+          10% { transform: translateX(-1px) rotate(-0.5deg); }
+          20% { transform: translateX(1px) rotate(0.5deg); }
+          30% { transform: translateX(-1px) rotate(-0.5deg); }
+          40% { transform: translateX(1px) rotate(0.5deg); }
+          50% { transform: translateX(-1px) rotate(-0.5deg); }
+          60% { transform: translateX(1px) rotate(0.5deg); }
+          70% { transform: translateX(-1px) rotate(-0.5deg); }
+          80% { transform: translateX(1px) rotate(0.5deg); }
+          90% { transform: translateX(-1px) rotate(-0.5deg); }
+        }
+        .vibrate-on-hover:hover,
+        .vibrate-once {
+          animation: vibrate 0.9s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 }
