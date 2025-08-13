@@ -13,21 +13,23 @@ import { X, Code, Palette, Rocket, Heart } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-// Added a trigger prop to accept custom triggers
+// Add triggerClassName to props
 interface WelcomeModalProps {
   trigger?: React.ReactNode;
+  triggerClassName?: string;
 }
 
-export default function WelcomeModal({ trigger }: WelcomeModalProps) {
+export default function WelcomeModal({ trigger, triggerClassName }: WelcomeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Default trigger is the logo
+  // Default trigger is the logo with vibration animation
   const defaultTrigger = (
     <Button
       variant="ghost"
- className="h-auto w-auto cursor-pointer rounded-2xl bg-white/30 p-3 shadow-lg backdrop-blur-lg
+      // Apply triggerClassName here
+      className={`h-auto w-auto cursor-pointer rounded-2xl bg-white/30 p-3 shadow-lg backdrop-blur-lg
            hover:bg-white/60 focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 border
-            border-black/50 hover:border-black/80 transition-all duration-300"
+            border-black/50 hover:border-black/80 transition-all duration-300 ${triggerClassName || ''}`}
       onClick={() => setIsOpen(true)}
     >
       <Image
